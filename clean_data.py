@@ -31,12 +31,12 @@ def process_train(path, outpath='data/train_vectorized.csv'):
     df2 = vector_merge(df, s3_client, bucket_name, s3_folder, sample_size=5000)
     df2.to_csv('data/train_vectorized.csv')
 
-def process_test(path, outpath='data/test_vectorized.csv'):
+def process_test(path, outpath='data/test_vectorized.csv', size=5):
     s3_client = boto3.client('s3')
     bucket_name = 'jarednewstudy'
     s3_folder = 'audio_test/'
     df = test_df(path)
-    df2 = vector_merge(df, s3_client, bucket_name, s3_folder, sample_size=5)
+    df2 = vector_merge(df, s3_client, bucket_name, s3_folder, sample_size=size)
     df2.to_csv(outpath)
 
 
@@ -46,13 +46,16 @@ if __name__ == "__main__":
     train_path = 'data/train_labels.csv'
     test_path = 'data/test_labels.csv'
     
+    
+
     clean_train = False
     if clean_train:
         process_train(train_path)
     
     clean_test = True
     if clean_test:
-        process_test(test_path)
+        size = int(input('How many test files to process? '))
+        process_test(test_path, size=size)
      
    # os.system("say 'complete'")
 
