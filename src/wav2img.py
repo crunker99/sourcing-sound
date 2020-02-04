@@ -7,7 +7,7 @@ from src.feature_extraction import call_s3
 def read_audio(prep, data, trim_long_data):
     try:
         y, sr = librosa.load(data, sr=prep.sampling_rate)
-    except RuntimeError:
+    except RuntimeError, TypeError:
         return np.array([])
     # trim silence
     if 0 < len(y): # workaround: 0 length causes error
