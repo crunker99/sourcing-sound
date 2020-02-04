@@ -33,8 +33,7 @@ def audio_vectorize(fname, data):
     """
     try:
         y, sr = librosa.load(data, mono=True, duration=10, offset = .5)
-    except:
-        RuntimeError
+    except RuntimeError:
         return pd.Series()
     
     chroma_stft = np.mean(librosa.feature.chroma_stft(y, sr))
@@ -53,7 +52,7 @@ def audio_vectorize(fname, data):
     return pd.Series(vector_dict)
 
 
-def vector_merge(df, s3_client, bucket_name, s3_folder = 'audio_train/', sample_size=200):
+def vector_merge(df, s3_client, bucket_name, s3_folder = 'audio_train/', sample_size=200, outpath=None):
     """
     Helper function for merging returned feature/vector dictionaries for multiple files in an S3 bucket,
     (number defined by sample_size) onto labelled dataframe, based on file names.
@@ -68,4 +67,5 @@ def vector_merge(df, s3_client, bucket_name, s3_folder = 'audio_train/', sample_
     vec_df = pd.concat(vectors, axis=1, sort=True).T
     df2 = pd.merge(df, vec_df, how='inner', on='fname')
     return df2
+
 
