@@ -7,7 +7,7 @@ from src.feature_extraction import call_s3
 def read_audio(prep, data, trim_long_data):
     try:
         y, sr = librosa.load(data, sr=prep.sampling_rate)
-    except RuntimeError, TypeError:
+    except(RuntimeError, TypeError):
         return np.array([])
     # trim silence
     if 0 < len(y): # workaround: 0 length causes error
@@ -70,7 +70,10 @@ def convert_wav_to_image(df, s3_client, bucket_name, s3_folder, sample_size=5):
     flat_df = pd.DataFrame(flat).T.reset_index()
     flat_df['fname'] = flat_df['index']
     flat_df = pd.merge(df, flat_df, how='inner', on='fname').drop(['index'], 1)
-    return X, flat_df, audio_data
+    audio_df = pd.DataFrame(audio_data).T.reset_index()
+    audio_df ['fname'] = audio_df['index']
+    audio_df = pd.merge(df, audio_df, how= 'inner', on='fname').drop(['index'], 1)
+    return X, flat_df, audio_df
 
 
 def image_merge():
