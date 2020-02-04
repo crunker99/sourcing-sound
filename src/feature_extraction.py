@@ -68,3 +68,4 @@ def vector_merge(df, s3_client, bucket_name, s3_folder = 'audio_train/', sample_
     vec_df = pd.concat(vectors, axis=1, sort=True).T
     df2 = pd.merge(df, vec_df, how='inner', on='fname')
     return df2
+
