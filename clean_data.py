@@ -19,11 +19,11 @@ def test_df(path):
         # read in labelled csv with file names
     df = pd.read_csv(path).set_index('fname')
     # dropping unneeded columns
-    df.drop(['license', 'freesound_id'], axis=1, inplace=True)
+    df.drop(['license', 'freesound_id', 'usage'], axis=1, inplace=True)
     df = df.reset_index()
     return df
 
-def process_train(path):
+def process_train(path, outpath='data/train_vectorized.csv'):
     s3_client = boto3.client('s3')
     bucket_name = 'jarednewstudy'
     s3_folder = 'audio_train/'
@@ -31,13 +31,13 @@ def process_train(path):
     df2 = vector_merge(df, s3_client, bucket_name, s3_folder, sample_size=5000)
     df2.to_csv('data/train_vectorized.csv')
 
-def process_test(path):
+def process_test(path, outpath='data/test_vectorized.csv'):
     s3_client = boto3.client('s3')
     bucket_name = 'jarednewstudy'
     s3_folder = 'audio_test/'
     df = test_df(path)
-    df2 = vector_merge(df, s3_client, bucket_name, s3_folder, sample_size=5000)
-    df2.to_csv('data/train_vectorized.csv')
+    df2 = vector_merge(df, s3_client, bucket_name, s3_folder, sample_size=5)
+    df2.to_csv(outpath)
 
 
 
@@ -48,11 +48,11 @@ if __name__ == "__main__":
     
     clean_train = False
     if clean_train:
-        process_train()
+        process_train(train_path)
     
-    clean_test = False
+    clean_test = True
     if clean_test:
-        process_test()
+        process_test(test_path)
      
    # os.system("say 'complete'")
 
