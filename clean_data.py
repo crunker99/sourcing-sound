@@ -17,7 +17,7 @@ if __name__ == "__main__":
     s3_client = boto3.client('s3')
     bucket_name = 'jarednewstudy'
     s3_folder = 'audio_train/'
-    df2 = vector_merge(df, s3_client, bucket_name, s3_folder, sample_size=1000)
+    df2 = vector_merge(df, s3_client, bucket_name, s3_folder, sample_size=5000)
     df2.to_csv('data/train_vectorized.csv')
-    os.system("say 'complete'")
+   # os.system("say 'complete'")
 
