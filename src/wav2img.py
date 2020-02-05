@@ -55,7 +55,7 @@ def read_as_melspectrogram(prep, data, trim_long_data, debug_display=False):
     return mels, x
 
 
-def convert_wav_to_image(df, s3_client, bucket_name, s3_folder, sample_size=5):
+def convert_wav_to_image(df, s3_client, bucket_name, s3_folder, outpath, sample_size=5):
     X = {} # image accumulator
     flat = {} # flat accumulator
     # audio_data = {} # audio accumulator
@@ -65,7 +65,8 @@ def convert_wav_to_image(df, s3_client, bucket_name, s3_folder, sample_size=5):
         X[fname] = mels
         flat[fname] = mels.reshape(-1)
         # audio_data[fname] = aud
-        print(i, ' appended ',fname)
+        if i % 10 == 0:
+            print(i, ' appended ',fname)
 
     flat_df = pd.DataFrame(flat).T.reset_index()
     flat_df['fname'] = flat_df['index']

@@ -44,7 +44,7 @@ def merge_data(vectorizer, path, outpath, audpath, s3_client, bucket_name, s3_fo
     Creates and saves PIL Images of spectrograms.
     """
     df = process_df(path)
-    X, flat_df, audio_df = vectorizer(df, s3_client, bucket_name, s3_folder, sample_size=size)
+    X, flat_df, audio_df = vectorizer(df, s3_client, bucket_name, s3_folder, outpath, sample_size=size)
     # export cleaned data for easier continuous use/model training...
     flat_df.to_csv(outpath)
     # audio_df.to_csv(audpath)
