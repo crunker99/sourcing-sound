@@ -58,21 +58,22 @@ def read_as_melspectrogram(prep, data, trim_long_data, debug_display=False):
 def convert_wav_to_image(df, s3_client, bucket_name, s3_folder, sample_size=5):
     X = {} # image accumulator
     flat = {} # flat accumulator
-    audio_data = {} # audio accumulator
+    # audio_data = {} # audio accumulator
     for i, fname in enumerate(df.loc[:sample_size-1, 'fname']):
         data = call_s3(s3_client, bucket_name, fname, s3_folder)
         mels, aud = read_as_melspectrogram(prep, data, trim_long_data=True, debug_display=False)
         X[fname] = mels
         flat[fname] = mels.reshape(-1)
-        audio_data[fname] = aud
+        # audio_data[fname] = aud
         print(i, ' appended ',fname)
 
     flat_df = pd.DataFrame(flat).T.reset_index()
     flat_df['fname'] = flat_df['index']
     flat_df = pd.merge(df, flat_df, how='inner', on='fname').drop(['index'], 1)
-    audio_df = pd.DataFrame(audio_data).T.reset_index()
-    audio_df ['fname'] = audio_df['index']
-    audio_df = pd.merge(df, audio_df, how= 'inner', on='fname').drop(['index'], 1)
+    # audio_df = pd.DataFrame(audio_data).T.reset_index()
+    # audio_df ['fname'] = audio_df['index']
+    # audio_df = pd.merge(df, audio_df, how= 'inner', on='fname').drop(['index'], 1)
+    audio_df = pd.DataFrame()
     return X, flat_df, audio_df
 
 
