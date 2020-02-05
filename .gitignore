@@ -137,3 +137,7 @@ dmypy.json
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+### Large files, csv, etx.
+/data/train_mels_vec.csv
+/data/mel_images/
