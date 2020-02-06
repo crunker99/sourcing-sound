@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-from src.feature_extraction import vector_merge
 from src.mels import mel_windowed, prep
 import boto3
 import os
@@ -40,8 +39,8 @@ def main():
     train_path = 'data/train_labels.csv'
     test_path = 'data/test_labels.csv'
     
-    train_out = 'data/train_mels_vec.csv'
-    test_out = 'data/test_mels_vec.csv'
+    train_out = 'data/train_windows_mel.csv'
+    test_out = 'data/test_windows_mel.csv'
 
     train_audpath = 'data/train_audio_data.csv'
     test_audpath = 'data/test_audio_data.csv'
