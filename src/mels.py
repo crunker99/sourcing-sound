@@ -75,7 +75,28 @@ def load_audio_windows(prep, label, fname, s3_client, bucket_name, s3_folder, tr
 #         assert win.shape == (prep.n_mels, prep.window_size)
     return windows
 
-
+def mel_windowed(df, batch, prep, s3_client, bucket_name, s3_folder, trim_long_data=True):
+    acc = []
+    labs = []
+    i=0
+    for row in df.iloc[:batch,:].iterrows():
+        print(i, " ", row[1][1])
+        i += 1
+        windows = load_audio_windows(prep=prep, 
+                                    label=row[1][1],
+                                    fname=row[1][0],
+                                    s3_client=s3_client,
+                                    bucket_name=bucket_name, 
+                                    s3_folder=s3_folder, 
+                                    trim_long_data=trim_long_data)
+    #     windows = flatten(windows)
+        for win in windows:
+            acc.append(win[:-1])
+            labs.append(win[-1])
+            
+    Meldf = pd.DataFrame(acc, labs)
+    Meldf.columns = [*Meldf.columns[:-1], 'labels']
+    return Meldf
 
 
 def show_melspectrogram(prep, mels, title='Log-frequency power spectrogram'):

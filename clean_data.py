@@ -1,32 +1,10 @@
 import numpy as np
 import pandas as pd
 from src.feature_extraction import vector_merge
-import src.mels
+from src.mels import mel_windowed, prep
 import boto3
 import os
 
-
-# def train_df(path):
-#     # read in labelled csv with file names
-#     df = pd.read_csv(path).set_index('fname')
-#     # dropping unneeded columns, corrupted files
-#     df.drop(['license', 'freesound_id'], axis=1, inplace=True)
-#     # df.drop(['f76181c4.wav', '77b925c2.wav', '6a1f682a.wav', 'c7db12aa.wav', '7752cc8a.wav', '1d44b0bd.wav'], inplace=True)
-#     df = df.reset_index()
-#     return df
-
-# def test_df(path):
-#     # read in labelled csv with file names
-#     df = pd.read_csv(path).set_index('fname')
-#     # dropping unneeded columns
-#     df.drop(['license', 'freesound_id'], axis=1, inplace=True)
-#     df = df.reset_index()
-#     return df
-
-# def process_test(path, outpath='data/test_vectorized.csv', s3_client, bucket_name, s3_folder, size=5):
-#     df = test_df(path)
-#     df2 = vector_merge(df, s3_client, bucket_name, s3_folder, sample_size=size)
-#     df2.to_csv(outpath)
 
 def process_df(path):
     # read in labelled csv with file names
@@ -35,20 +13,27 @@ def process_df(path):
     df.drop(['license', 'freesound_id'], axis=1, inplace=True)
     return df
 
-def merge_data(vectorizer, path, outpath, audpath, s3_client, bucket_name, s3_folder, size=5):
+def merge_data(vectorizer, path, outpath, audpath, prep, s3_client, bucket_name, s3_folder, size=5):
     """
     Processes audio into mel spectrograms, links back with labels. 
     Creates and saves CSVs of flattened(vectorized) spectrograms, and original audio data.
     Creates and saves PIL Images of spectrograms.
     """
     df = process_df(path)
-    X, flat_df = vectorizer(df, s3_client, bucket_name, s3_folder, outpath, sample_size=size)
+
+    flat_df = vectorizer(df=df,
+                        batch=size,
+                        prep=prep,
+                        s3_client=s3_client, 
+                        bucket_name=bucket_name,
+                        s3_folder=s3_folder,
+                        trim_long_data=True)
     # export cleaned data for easier continuous use/model training...
     flat_df.to_csv(outpath)
     # audio_df.to_csv(audpath)
-    for k, v in X.items():
-        img = Image.fromarray(v, 'L')
-        img.save('data/mel_images/{}.png'.format(k))
+    # for k, v in X.items():
+    #     img = Image.fromarray(v, 'L')
+    #     img.save('data/mel_images/{}.png'.format(k))
 
 
 def main():
@@ -66,19 +51,19 @@ def main():
     train_s3_folder = 'audio_train/'
     test_s3_folder = 'audio_test/'
     
-    # vectorizater = vector_merge()
-    vectorizer = convert_wav_to_image
-
+    vectorizer = mel_windowed
 
     clean_train = True
     if clean_train:
         size = int(input('How many train files to process? '))
-        merge_data(vectorizer, train_path, train_out, train_audpath, s3_client, bucket_name, train_s3_folder, size=size)
+        merge_data(vectorizer, train_path, train_out, train_audpath,
+                    prep, s3_client, bucket_name, train_s3_folder, size=size)
     
     clean_test = False
     if clean_test:
         size = int(input('How many test files to process? '))
-        merge_data(vectorizer, test_path, test_out, test_audpath, s3_client, bucket_name, test_s3_folder, size=size)
+        merge_data(vectorizer, test_path, test_out, test_audpath,
+                    prep, s3_client, bucket_name, test_s3_folder, size=size)
 
 
 if __name__ == "__main__":
