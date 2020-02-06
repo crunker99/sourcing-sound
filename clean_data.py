@@ -52,7 +52,7 @@ def merge_data(vectorizer, path, outpath, audpath, s3_client, bucket_name, s3_fo
         img.save('data/mel_images/{}.png'.format(k))
 
 
-if __name__ == "__main__":
+def main():
     train_path = 'data/train_labels.csv'
     test_path = 'data/test_labels.csv'
     
@@ -81,5 +81,8 @@ if __name__ == "__main__":
         size = int(input('How many test files to process? '))
         merge_data(vectorizer, test_path, test_out, test_audpath, s3_client, bucket_name, test_s3_folder, size=size)
 
+
+if __name__ == "__main__":
+    main()
    ### os.system("say 'complete'")
 
