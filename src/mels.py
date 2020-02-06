@@ -14,7 +14,7 @@ class prep:
     frames = 86
     fmin = 20
     fmax = sampling_rate
-    n_mels = 60
+    n_mels = 30
     n_fft = n_mels * 20 #Fast Fourier Transform
     samples = sampling_rate * duration
     window_length = 1024 #for STFT
