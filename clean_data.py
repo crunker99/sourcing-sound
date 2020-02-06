@@ -1,8 +1,7 @@
 import numpy as np
 import pandas as pd
 from src.feature_extraction import vector_merge
-from src.wav2img import convert_wav_to_image
-from PIL import Image
+import src.mels
 import boto3
 import os
 
@@ -31,7 +30,7 @@ import os
 
 def process_df(path):
     # read in labelled csv with file names
-    df = pd.read_csv(path).set_index('fname')
+    df = pd.read_csv(path)
     # dropping unneeded columns
     df.drop(['license', 'freesound_id'], axis=1, inplace=True)
     return df

@@ -58,7 +58,7 @@ def sample_windows(length, frame_samples, window_frames, overlap=0.5, start=0):
 
 def show_melspectrogram(prep, mels, title='Log-frequency power spectrogram'):
     librosa.display.specshow(mels, x_axis='time', y_axis='mel', 
-                             sr=conf.sampling_rate, hop_length=conf.hop_length,
+                             sr=prep.sampling_rate, hop_length=conf.hop_length,
                             fmin=conf.fmin, fmax=conf.fmax,  cmap='gist_ncar')
     plt.colorbar(format='%+2.0f dB')
     plt.title(title)
@@ -150,18 +150,22 @@ def load_audio_windows(prep, s3_client, bucket_name, fname, s3_folder, trim_long
                          hop_length=prep.hop_length, win_length=prep.window_length)
     mels = librosa.feature.melspectrogram(y=y, sr=sr, S=S,
                                             n_mels=prep.n_mels, fmin=prep.fmin, fmax=prep.fmax)
-    #using truncation
-    start_frame = prep.window_size
-    end_frame = prep.window_hop * math.floor(float(prep.frames) / prep.window_hop)
+
+    window_size = prep.window_size
+    window_hop = prep.window_hop
+    #truncation
+    start_frame = window_size
+    end_frame = window_hop * (mels.shape[1] // window_hop)  
     windows = []
     for frame_idx in range(start_frame, end_frame, window_hop):
         # grab a slice of the spectogram at once
-        win = mels[:, frame_idx - prep.window_size:frame_idx]
-
+        win = mels[:, frame_idx-window_size:frame_idx]
+        #normalize within frame
         win = np.log(win + 1e-9) 
         win -= np.mean(win)
         win /= np.std(win)
-
+        print(win.shape)
+        windows.append(win)
         assert win.shape == (prep.n_mels, prep.window_size)
         windows.append(win)
 
@@ -211,5 +215,6 @@ class prep:
     n_mels = 60
     n_fft = n_mels * 20 #Fast Fourier Transform
     samples = sampling_rate * duration
-    window_length = 31 
-    window_hop = 0.5 # amount to hop during snapshot
+    window_length = 1024 #for STFT
+    window_size = frames
+    window_hop = window_size // 2 # amount to hop during snapshot
