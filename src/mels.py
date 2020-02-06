@@ -80,8 +80,7 @@ def mel_windowed(df, batch, prep, s3_client, bucket_name, s3_folder, trim_long_d
     labs = []
     i=0
     for row in df.iloc[:batch,:].iterrows():
-        if i % 50 == 0:
-            print(i, " ", row[1][1])
+        print(i, " ", row[1][1])
         i += 1
         windows = load_audio_windows(prep=prep, 
                                     label=row[1][1],
