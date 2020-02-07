@@ -143,4 +143,5 @@ Thumbs.db
 /data/test_mels_vec.csv
 /data/train_windows_mel.csv
 /data/test_windows_mel.csv
+/data/test_windows_mel.zip
 /data/mel_images/

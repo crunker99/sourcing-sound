@@ -9,7 +9,10 @@ from botocore.exceptions import ClientError
 def call_s3(s3_client, bucket_name, fname, folder='audio_train/'):
     """Call S3 instance to retrieve data from .wav file(or other format).
     Assumes file is in folder name path"""
-    path = folder + fname
+    try:
+        path = folder + fname
+    except TypeError:
+        return None
     try:
         response = s3_client.get_object(Bucket=bucket_name, Key=path)
     except ClientError as ex:

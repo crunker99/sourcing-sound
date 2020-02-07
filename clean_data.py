@@ -3,13 +3,14 @@ import pandas as pd
 from src.mels import mel_windowed, prep
 import boto3
 import os
+from io import BytesIO
 
 
 def process_df(path):
     # read in labelled csv with file names
-    df = pd.read_csv(path)
-    # dropping unneeded columns
-    df.drop(['license', 'freesound_id'], axis=1, inplace=True)
+    df = pd.read_csv(path, index_col=0)
+    # dropping unneeded columns, if in file
+    # df.drop(['license', 'freesound_id'], axis=1, inplace=True)
     return df
 
 def merge_data(vectorizer, path, outpath, audpath, prep, s3_client, bucket_name, s3_folder, size=5):
@@ -28,7 +29,16 @@ def merge_data(vectorizer, path, outpath, audpath, prep, s3_client, bucket_name,
                         s3_folder=s3_folder,
                         trim_long_data=True)
     # export cleaned data for easier continuous use/model training...
-    flat_df.to_csv(outpath)
+
+    flat_df.to_csv(outpath, compression='infer')
+
+    # csv_buffer = BytesIO()
+    # flat_df.to_csv(csv_buffer, index=False)
+    # response = s3client.put_object(Body=csv_buffer.getvalue(),
+                                    # ContentType='application/vnd.ms-excel',
+                                    # Bucket=bucket_name,
+                                    # Key=outpath)
+
     # audio_df.to_csv(audpath)
     # for k, v in X.items():
     #     img = Image.fromarray(v, 'L')
@@ -37,10 +47,10 @@ def merge_data(vectorizer, path, outpath, audpath, prep, s3_client, bucket_name,
 
 def main():
     train_path = 'data/train_labels.csv'
-    test_path = 'data/test_labels.csv'
+    test_path = 'data/test_balanced.csv'
     
     train_out = 'data/train_windows_mel.csv'
-    test_out = 'data/test_windows_mel.csv'
+    test_out = 'data/test_windows_mel.zip'
 
     train_audpath = 'data/train_audio_data.csv'
     test_audpath = 'data/test_audio_data.csv'
@@ -61,11 +71,18 @@ def main():
     clean_test = True
     if clean_test:
         size = int(input('How many test files to process? '))
-        merge_data(vectorizer, test_path, test_out, test_audpath,
-                    prep, s3_client, bucket_name, test_s3_folder, size=size)
+        merge_data(vectorizer,
+         test_path, 
+         test_out,
+          test_audpath,
+             prep,
+              s3_client, 
+              bucket_name, 
+              test_s3_folder, 
+              size=size)
 
 
 if __name__ == "__main__":
     main()
-   ### os.system("say 'complete'")
+    os.system("say 'complete'")
 
