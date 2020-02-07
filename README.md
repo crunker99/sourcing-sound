@@ -3,7 +3,16 @@
 
 
 
-### Introduction
+### Project Description and Motivation
+- Identify sound from many possible sources (speech, animals, vehicles, ambient noise, etc.)
+- Wide variety of applications for audio recognition:
+- Manufacturing quality control
+- Domestic animal monitoring
+Wildlife monitoring
+Security event detection
+Music production
+This project intends to provide proof of concept by narrowing on a single sound, a cat’s purr.
+
 
 
 ### Dataset

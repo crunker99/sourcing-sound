@@ -4,7 +4,7 @@ from librosa.core import stft
 from librosa.feature import melspectrogram
 import librosa
 from src.feature_extraction import call_s3
-
+import matplotlib.pyplot as plt
 
 class prep:
     # Preprocessing settings
@@ -101,10 +101,11 @@ def mel_windowed(df, batch, prep, s3_client, bucket_name, s3_folder, trim_long_d
     return Meldf
 
 
-def show_melspectrogram(prep, mels, title='Log-frequency power spectrogram'):
+def show_melspectrogram(prep, mels, title='Log-frequency power spectrogram', cmap='gist_ncar', i=0):
     librosa.display.specshow(mels, x_axis='time', y_axis='mel', 
-                             sr=prep.sampling_rate, hop_length=conf.hop_length,
-                            fmin=conf.fmin, fmax=conf.fmax,  cmap='gist_ncar')
+                             sr=prep.sampling_rate, hop_length=prep.hop_length,
+                            fmin=prep.fmin, fmax=10000,  cmap=cmap)
     plt.colorbar(format='%+2.0f dB')
     plt.title(title)
+    plt.savefig('img/mel_win{}.png'.format(i), dpi=256)
     plt.show()
