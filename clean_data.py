@@ -52,13 +52,13 @@ def main():
     
     vectorizer = mel_windowed
 
-    clean_train = True
+    clean_train = False
     if clean_train:
         size = int(input('How many train files to process? '))
         merge_data(vectorizer, train_path, train_out, train_audpath,
                     prep, s3_client, bucket_name, train_s3_folder, size=size)
     
-    clean_test = False
+    clean_test = True
     if clean_test:
         size = int(input('How many test files to process? '))
         merge_data(vectorizer, test_path, test_out, test_audpath,

@@ -14,7 +14,7 @@ class prep:
     frames = 86
     fmin = 20
     fmax = sampling_rate
-    n_mels = 30
+    n_mels = 60
     n_fft = n_mels * 20 #Fast Fourier Transform
     samples = sampling_rate * duration
     window_length = 1024 #for STFT
@@ -46,8 +46,10 @@ def read_audio(prep, s3_client, bucket_name, fname, s3_folder, trim_long_data):
 
 
 def load_audio_windows(prep, label, fname, s3_client, bucket_name, s3_folder, trim_long_data):
-    
-    y, sr = read_audio(prep, s3_client, bucket_name, fname, s3_folder, trim_long_data)
+    try:
+        y, sr = read_audio(prep, s3_client, bucket_name, fname, s3_folder, trim_long_data)
+    except ValueError:
+        return [np.zeros((1, prep.n_mels * int(prep.window_size)))]
     S = stft(y, n_fft=prep.n_fft,
                          hop_length=prep.hop_length, win_length=prep.window_length)
     mels = melspectrogram(y=y, sr=sr, S=S,
