@@ -13,19 +13,19 @@ import pickle
 from tensorflow.keras.callbacks import ModelCheckpoint
 from cfg import Config
 
-# def check_data():
-#     if os.path.isfile(config.p_path):
-#         print('Loading existing data for {} model'.format(config.mode))
-#         with open(config.p_path, 'rb') as handle:
-#             tmp = pickle.load(handle)
-#             return tmp 
-#     else:
-#         return None
+def check_data():
+    if os.path.isfile(config.p_path):
+        print('Loading existing data for {} model'.format(config.mode))
+        with open(config.p_path, 'rb') as handle:
+            tmp = pickle.load(handle)
+            return tmp 
+    else:
+        return None
 
 def build_rand_feat():
     # tmp = check_data()
-    # if tmp:
-    #     return tmp.data[0], tmp.data[1]
+    if tmp:
+        return tmp.data[0], tmp.data[1]
     X = []
     y = []
     _min, _max = float('inf'), -float('inf')
@@ -65,7 +65,7 @@ def get_conv_model():
     model.add(Conv2D(128, (3, 3), activation='relu', strides=(1,1),
                     padding='same'))
     model.add(MaxPool2D((2,2)))
-    model.add(Dropout(0.5))
+    model.add(Dropout(0.2))
     model.add(Flatten())
     model.add(Dense(128, activation='relu'))
     model.add(Dense(64, activation='relu'))
