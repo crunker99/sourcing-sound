@@ -52,6 +52,8 @@ model = load_model(config.model_path)
 y_true, y_pred, fn_prob = build_predictions('clean')
 
 acc_score = accuracy_score(y_true=y_true, y_pred=y_pred)
+prec_score = precision_score(y_true=y_true, y_pred=y_pred)
+rec_score = recall_score(y_true=y_true, y_pred=y_pred)
 
 y_probs = []
 for i, row in df.iterrows():
