@@ -109,5 +109,5 @@ model.fit(X, y, epochs=10, batch_size=32,
             validation_split=0.1)
 # callbacks=[checkpoint] ### can be added
 
-model.save(config.model_path)
+# model.save(config.model_path)
 
