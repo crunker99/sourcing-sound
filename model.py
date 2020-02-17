@@ -101,8 +101,8 @@ class_weight = compute_class_weight('balanced',
                                     np.unique(y_flat),
                                     y_flat)
 
-# checkpoint = ModelCheckpoint(config.model_path, monitor='val_acc', verbose=1, mode='max',
-                            # save_best_only=True, save_weights_only=False, period=1)
+checkpoint = ModelCheckpoint(config.model_path, monitor='val_acc', verbose=1, mode='max',
+                             save_best_only=True, save_weights_only=False, period=1)
 
 model.fit(X, y, epochs=50, batch_size=32,
             shuffle=True, class_weight=class_weight,
