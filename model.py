@@ -23,7 +23,7 @@ def check_data():
         return None
 
 def build_rand_feat():
-    # tmp = check_data()
+    tmp = check_data()
     if tmp:
         return tmp.data[0], tmp.data[1]
     X = []
@@ -65,7 +65,7 @@ def get_conv_model():
     model.add(Conv2D(128, (3, 3), activation='relu', strides=(1,1),
                     padding='same'))
     model.add(MaxPool2D((2,2)))
-    model.add(Dropout(0.2))
+    model.add(Dropout(0.5))
     model.add(Flatten())
     model.add(Dense(128, activation='relu'))
     model.add(Dense(64, activation='relu'))
@@ -104,10 +104,9 @@ class_weight = compute_class_weight('balanced',
 # checkpoint = ModelCheckpoint(config.model_path, monitor='val_acc', verbose=1, mode='max',
                             # save_best_only=True, save_weights_only=False, period=1)
 
-model.fit(X, y, epochs=10, batch_size=32,
+model.fit(X, y, epochs=50, batch_size=32,
             shuffle=True, class_weight=class_weight,
-            validation_split=0.1)
-# callbacks=[checkpoint] ### can be added
+            validation_split=0.1, callbacks=[checkpoint]) ### can be added
 
 model.save(config.model_path)
 
