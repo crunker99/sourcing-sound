@@ -62,7 +62,7 @@ for i, row in df.iterrows():
     for c, p in zip(classes, y_prob):
         df.at[i, c] = p
 
-y_pred = [classes[np.argmax(y)] for y in y_probs]]
+y_pred = [classes[np.argmax(y)] for y in y_probs]
 df['y_pred'] = y_pred
 
 df.to_csv('predictions.csv', index=False)
