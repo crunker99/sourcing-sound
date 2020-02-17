@@ -22,6 +22,6 @@ if __name__ == "__main__":
     roadsound = {'Accelerating_and_revving_and_vroom', 'Bicycle_bell', 'Bus', 
                     'Car_passing_by' 'Motorcycle', 'Race_car_and_auto_racing', 
                     'Skateboard', 'Traffic_noise_and_roadway_noise',}
-    df = get_single_labels(TOT, road_sounds)
+    df = get_single_labels(TOT, roadsounds)
     df.to_csv('data/{}/roadsound_labels.csv'.format(TOT))
 
