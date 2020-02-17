@@ -2,67 +2,67 @@ import os
 from tqdm import tqdm
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 from scipy.io import wavfile
 from python_speech_features import mfcc, logfbank
 import librosa
 import timeit
 
-def plot_signals(signals):
-    fig, axs = plt.subplots(2, 4, sharex=False,
-                            sharey=True, figsize=(20,5))
-    fig.suptitle('Time Series', size=16)
-    idx = 0
-    for i in range(2):
-        for j in range(4):
-            axs[i,j].set_title(list(signals.keys())[idx])
-            axs[i,j].plot(list(signals.values())[idx])
-            axs[i,j].get_xaxis().set_visible(False)
-            axs[i,j].get_yaxis().set_visible(False)
-            idx += 1
+# def plot_signals(signals):
+#     fig, axs = plt.subplots(2, 4, sharex=False,
+#                             sharey=True, figsize=(20,5))
+#     fig.suptitle('Time Series', size=16)
+#     idx = 0
+#     for i in range(2):
+#         for j in range(4):
+#             axs[i,j].set_title(list(signals.keys())[idx])
+#             axs[i,j].plot(list(signals.values())[idx])
+#             axs[i,j].get_xaxis().set_visible(False)
+#             axs[i,j].get_yaxis().set_visible(False)
+#             idx += 1
 
-def plot_fft(fft):
-    fig, axs = plt.subplots(2, 4, sharex=False,
-                            sharey=True, figsize=(20,5))
-    fig.suptitle('Fourier Transforms', size=16)
-    idx = 0
-    for i in range(2):
-        for j in range(4):
-            data = list(fft.values())[idx]
-            Y, freq = data[0], data[1]
-            axs[i,j].set_title(list(fft.keys())[idx])
-            axs[i,j].plot(freq, Y)
-            axs[i,j].get_xaxis().set_visible(False)
-            axs[i,j].get_yaxis().set_visible(False)
-            idx += 1
+# def plot_fft(fft):
+#     fig, axs = plt.subplots(2, 4, sharex=False,
+#                             sharey=True, figsize=(20,5))
+#     fig.suptitle('Fourier Transforms', size=16)
+#     idx = 0
+#     for i in range(2):
+#         for j in range(4):
+#             data = list(fft.values())[idx]
+#             Y, freq = data[0], data[1]
+#             axs[i,j].set_title(list(fft.keys())[idx])
+#             axs[i,j].plot(freq, Y)
+#             axs[i,j].get_xaxis().set_visible(False)
+#             axs[i,j].get_yaxis().set_visible(False)
+#             idx += 1
 
-def plot_fbank(fbank):
-    fig, axs = plt.subplots(2, 4, sharex=False,
-                            sharey=True, figsize=(20,5))
-    fig.suptitle('Filter Bank Coefficients', size=16)
-    idx = 0
-    for i in range(2):
-        for j in range(4):
-            axs[i,j].set_title(list(fbank.keys())[idx])
-            axs[i,j].imshow(list(fbank.values())[idx],
-                            cmap='hot', interpolation='nearest')
-            axs[i,j].get_xaxis().set_visible(False)
-            axs[i,j].get_yaxis().set_visible(False)
-            idx += 1
+# def plot_fbank(fbank):
+#     fig, axs = plt.subplots(2, 4, sharex=False,
+#                             sharey=True, figsize=(20,5))
+#     fig.suptitle('Filter Bank Coefficients', size=16)
+#     idx = 0
+#     for i in range(2):
+#         for j in range(4):
+#             axs[i,j].set_title(list(fbank.keys())[idx])
+#             axs[i,j].imshow(list(fbank.values())[idx],
+#                             cmap='hot', interpolation='nearest')
+#             axs[i,j].get_xaxis().set_visible(False)
+#             axs[i,j].get_yaxis().set_visible(False)
+#             idx += 1
 
-def plot_mfccs(mfccs):
-    fig, axs = plt.subplots(2, 4, sharex=False,
-                            sharey=True, figsize=(20,5))
-    fig.suptitle('Filter Bank Coefficients', size=16)
-    idx = 0
-    for i in range(2):
-        for j in range(4):
-            axs[i,j].set_title(list(mfccs.keys())[idx])
-            axs[i,j].imshow(list(mfccs.values())[idx],
-                            cmap='hot', interpolation='nearest')
-            axs[i,j].get_xaxis().set_visible(False)
-            axs[i,j].get_yaxis().set_visible(False)
-            idx += 1
+# def plot_mfccs(mfccs):
+#     fig, axs = plt.subplots(2, 4, sharex=False,
+#                             sharey=True, figsize=(20,5))
+#     fig.suptitle('Filter Bank Coefficients', size=16)
+#     idx = 0
+#     for i in range(2):
+#         for j in range(4):
+#             axs[i,j].set_title(list(mfccs.keys())[idx])
+#             axs[i,j].imshow(list(mfccs.values())[idx],
+#                             cmap='hot', interpolation='nearest')
+#             axs[i,j].get_xaxis().set_visible(False)
+#             axs[i,j].get_yaxis().set_visible(False)
+#             idx += 1
 
 def envelope(y, rate, threshold):
     y = pd.Series(y).apply(np.abs)
