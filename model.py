@@ -107,7 +107,7 @@ checkpoint = ModelCheckpoint(config.model_path, monitor='val_acc', verbose=1, mo
 model.fit(X, y, epochs=10, batch_size=32,
             shuffle=True, class_weight=class_weight,
             validation_split=0.1)
-                                # callbacks=[checkpoint] ### can be added
+# callbacks=[checkpoint] ### can be added
 
 model.save(config.model_path)
 
