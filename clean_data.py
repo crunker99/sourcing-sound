@@ -47,7 +47,7 @@ def merge_data(vectorizer, path, outpath, audpath, prep, s3_client, bucket_name,
 
 def main():
     train_path = 'data/train_labels.csv'
-    test_path = 'data/test_balanced.csv'
+    test_path = 'data/test_labels.csv'
     
     train_out = 'data/train_windows_mel.csv'
     test_out = 'data/test_windows_mel.zip'
@@ -72,14 +72,14 @@ def main():
     if clean_test:
         size = int(input('How many test files to process? '))
         merge_data(vectorizer,
-         test_path, 
-         test_out,
-          test_audpath,
-             prep,
-              s3_client, 
-              bucket_name, 
-              test_s3_folder, 
-              size=size)
+                    test_path, 
+                    test_out,
+                    test_audpath,
+                    prep,
+                    s3_client, 
+                    bucket_name, 
+                    test_s3_folder, 
+                    size=size)
 
 
 if __name__ == "__main__":
