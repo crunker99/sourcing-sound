@@ -146,9 +146,9 @@ Thumbs.db
 /data/test_windows_mel.zip
 /data/mel_images/
 /data/train_df.joblib
-/models/
 /data/X_train_pca.joblib
 /audio/
 /clean/
+
 
 ##

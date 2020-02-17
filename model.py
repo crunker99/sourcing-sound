@@ -13,19 +13,19 @@ import pickle
 from tensorflow.keras.callbacks import ModelCheckpoint
 from cfg import Config
 
-def check_data():
-    if os.path.isfile(config.p_path):
-        print('Loading existing data for {} model'.format(config.mode))
-        with open(config.p_path, 'rb') as handle:
-            tmp = pickle.load(handle)
-            return tmp 
-    else:
-        return None
+# def check_data():
+#     if os.path.isfile(config.p_path):
+#         print('Loading existing data for {} model'.format(config.mode))
+#         with open(config.p_path, 'rb') as handle:
+#             tmp = pickle.load(handle)
+#             return tmp 
+#     else:
+#         return None
 
 def build_rand_feat():
-    tmp = check_data()
-    if tmp:
-        return tmp.data[0], tmp.data[1]
+    # tmp = check_data()
+    # if tmp:
+    #     return tmp.data[0], tmp.data[1]
     X = []
     y = []
     _min, _max = float('inf'), -float('inf')
@@ -64,15 +64,13 @@ def get_conv_model():
                     padding='same'))
     model.add(Conv2D(128, (3, 3), activation='relu', strides=(1,1),
                     padding='same'))
-    model.add(Conv2D(256, (3, 3), activation='relu', strides=(1,1),
-                    padding='same'))
     model.add(MaxPool2D((2,2)))
     model.add(Dropout(0.5))
     model.add(Flatten())
-    model.add(Dense(256, activation='relu'))
     model.add(Dense(128, activation='relu'))
-    model.add(Dense(74, activation='relu'))
-    model.sumamary()
+    model.add(Dense(64, activation='relu'))
+    model.add(Dense(5, activation='softmax'))
+    model.summary()
     model.compile(loss='categorical_crossentropy',
                     optimizer='adam',
                     metrics=['acc'])
@@ -104,11 +102,12 @@ class_weight = compute_class_weight('balanced',
                                     y_flat)
 
 checkpoint = ModelCheckpoint(config.model_path, monitor='val_acc', verbose=1, mode='max',
-                            save_best_only=True, save_weights_only=False, period=1)
+                            # save_best_only=True, save_weights_only=False, period=1)
 
 model.fit(X, y, epochs=10, batch_size=32,
             shuffle=True, class_weight=class_weight,
-            validation_split=0.1, callbacks=[checkpoint])
+            validation_split=0.1)
+                                # callbacks=[checkpoint] ### can be added
 
 model.save(config.model_path)
 

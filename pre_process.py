@@ -22,9 +22,9 @@ def get_single_labels(TOT='train', subset={}):
 
 if __name__ == "__main__":
     TOT = 'train'
-    roadsound = {'Accelerating_and_revving_and_vroom', 'Bicycle_bell', 'Bus', 
-                    'Car_passing_by' 'Motorcycle', 'Race_car_and_auto_racing', 
-                    'Skateboard', 'Traffic_noise_and_roadway_noise',}
+    roadsound = {'Bicycle_bell', 'Bus', 
+                 'Motorcycle', 'Race_car_and_auto_racing', 
+                    'Skateboard',}
     df = get_single_labels(TOT, roadsound)
     df.to_csv('data/{}/roadsound_labels.csv'.format(TOT))
 
