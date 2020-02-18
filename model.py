@@ -65,7 +65,7 @@ def build_rand_feat():
 
 def get_conv_model():
     model = Sequential()
-    model.add(Conv2D(filters=16, kernel_size=(3, 3), activation='relu',
+    model.add(Conv2D(filters=16, kernel_size=(5, 5), activation='relu',
                     strides=(1,1), padding='same', input_shape=input_shape))    
     model.add(Conv2D(32, (3, 3), activation='relu', strides=(1,1),padding='same')) 
     model.add(SpatialDropout2D(0.2))
