@@ -8,6 +8,7 @@ from tensorflow.keras.layers import Dropout, SpatialDropout2D, Dense
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.utils import to_categorical
 from sklearn.utils.class_weight import compute_class_weight
+from sklearn.model_selection import train_test_split
 import pickle
 from tensorflow.keras.callbacks import ModelCheckpoint
 from python_speech_features import mfcc
@@ -25,10 +26,12 @@ def check_data():
     else:
         return None
 
-def build_rand_feat():
+def build_rand_feat(df, split):
     tmp = check_data()
-    if tmp:
+    if tmp and split == 'train':
         return tmp.data[0], tmp.data[1]
+    if tmp and split == 'test':
+        return tmp.data[2], tmp.data[3]
     X = []
     y = []
     _min, _max = float('inf'), -float('inf')
@@ -56,11 +59,13 @@ def build_rand_feat():
     X = (X - _min) / (_max - _min)
     X = X.reshape(X.shape[0], X.shape[1], X.shape[2], 1)
     y = to_categorical(y)
-    config.data = (X, y)
+    if split == 'train':
+        config.data[0], config.data[1] = (X, y)
+    elif split == 'test':
+        config.data[2], config.data[3] = (X, y)
 
     with open(config.p_path, 'wb') as handle:
         pickle.dump(config, handle, protocol=2)
-
     return X, y
 
 def get_conv_model():
@@ -68,14 +73,14 @@ def get_conv_model():
     model.add(Conv2D(filters=16, kernel_size=(5, 5), activation='relu',
                     strides=(1,1), padding='same', input_shape=input_shape))    
     model.add(Conv2D(32, (3, 3), activation='relu', strides=(1,1),padding='same')) 
-    model.add(SpatialDropout2D(0.2))
-    model.add(Conv2D(64, (3, 3), activation='relu', strides=(1,1),padding='same'))
-    model.add(Conv2D(128, (3, 3), activation='relu', strides=(1,1), padding='same'))
+    # model.add(SpatialDropout2D(0.2))
+    # model.add(Conv2D(64, (3, 3), activation='relu', strides=(1,1),padding='same'))
+    # model.add(Conv2D(128, (3, 3), activation='relu', strides=(1,1), padding='same'))
     model.add(MaxPool2D((2,2)))
     model.add(Dropout(0.2))
     model.add(Flatten())
-    model.add(Dense(128, activation='relu'))
-    model.add(Dropout(0.5))
+    # model.add(Dense(128, activation='relu'))
+    model.add(Dropout(0.2))
     model.add(Dense(64, activation='relu'))
     model.add(Dropout(0.5))
     model.add(Dense(5, activation='softmax'))
@@ -86,11 +91,12 @@ def get_conv_model():
     return model
 
 
-df = pd.read_csv('data/train/roadsound_labels.csv')
+df = pd.read_csv('data/train/roadsound_labels.csv', index_col=0)
 df.set_index('fname', inplace=True)
 for f in df.index:
     rate, signal = wavfile.read('clean/'+f)
     df.at[f, 'length'] = signal.shape[0]/rate
+
 
 classes = list(np.unique(df.labels))
 class_dist = df.groupby(['labels'])['length'].mean()
@@ -100,8 +106,11 @@ choices = np.random.choice(class_dist.index, p=prob_dist)
 
 config = Config()
 
+df, test_df, _, _ = train_test_split(df, df.labels)
+
 if config.mode == 'conv':
-    X, y = build_rand_feat()
+    X, y = build_rand_feat(df, 'train')
+    X_test, y_test = build_rand_feat(test_df, 'test')
     y_flat = np.argmax(y, axis=1) # create an array of integer labels
     input_shape = (X.shape[1], X.shape[2], 1)
     model = get_conv_model()
@@ -113,9 +122,9 @@ class_weight = compute_class_weight('balanced',
 checkpoint = ModelCheckpoint(config.model_path, monitor='val_acc', verbose=1, mode='max',
                              save_best_only=True, save_weights_only=False, period=1)
 
-model.fit(X, y, epochs=20, batch_size=32,
+model.fit(X, y, epochs=10, batch_size=32,
             shuffle=True, class_weight=class_weight,
-            validation_split=0.5, callbacks=[checkpoint])
+            validation_data =(X_test, y_test) , callbacks=[checkpoint])
 
 model.save(config.model_path)
 

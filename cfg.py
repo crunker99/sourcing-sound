@@ -6,7 +6,7 @@ class Config:
                 nfeat=13, 
                 nfft=512,
                 rate =16000,
-                n_mels=60,
+                n_mels=26,
                 feature_type='mels'):
         self.mode = mode
         self.nfilt = nfilt
@@ -18,4 +18,4 @@ class Config:
         self.feature_type = feature_type
         self.model_path = os.path.join('models', mode + '.model')
         self.p_path = os.path.join('pickles', mode + '.p')
-        self.test_p_path = os.path.join('pickles', mode + '_')
+        self.test_p_path = os.path.join('pickles', mode + '_test.p')
