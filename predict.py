@@ -10,6 +10,16 @@ from python_speech_features import mfcc
 from tensorflow.keras.models import load_model
 from sklearn.metrics import accuracy_score, precision_score, recall_score
 
+
+def check_test_data():
+    if os.path.isfile(config.testdata):
+        print('Loading existing data for {} model'.format(config.mode))
+        with open(config.testdata, 'rb') as handle:
+            tmp = pickle.load(handle)
+            return tmp 
+    else:
+        return None
+
 def build_predictions(audio_dir):
     y_true = []
     y_pred = []
@@ -46,13 +56,18 @@ def build_predictions(audio_dir):
             y_true.append(c)
 
         fn_prob[fn] = np.mean(y_prob, axis=0).flatten() #take average prediction file name
+
+    # config.test_data = y_true, y_pred, fn_prob
+    # with open(config.testdata, 'wb') as handle:
+    #     pickle.dump(config, handle, protocol=2)
+
     return y_true, y_pred, fn_prob
 
 
 df = pd.read_csv('data/test/roadsound_labels.csv', index_col=0)
 classes = list(np.unique(df.labels))
 fn2class = dict(zip(df.fname, df.labels))
-p_path = os.path.join('pickles', 'conv.p')
+p_path = os.path.join('pickles', 'conv.p') ### configuration file
 
 with open(p_path, 'rb') as handle:
     config = pickle.load(handle)

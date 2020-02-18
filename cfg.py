@@ -18,3 +18,4 @@ class Config:
         self.feature_type = feature_type
         self.model_path = os.path.join('models', mode + '.model')
         self.p_path = os.path.join('pickles', mode + '.p')
+        self.test_p_path = os.path.join('pickles', mode + '_')

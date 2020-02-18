@@ -32,7 +32,7 @@ def build_rand_feat():
     X = []
     y = []
     _min, _max = float('inf'), -float('inf')
-    print('building features')
+    print('Building features of training data')
     for _ in tqdm(range(n_samples)):
         rand_class = np.random.choice(classes, p=prob_dist)
         file = np.random.choice(df[df.labels == rand_class].index)
@@ -77,6 +77,7 @@ def get_conv_model():
     model.add(Dense(128, activation='relu'))
     model.add(Dropout(0.5))
     model.add(Dense(64, activation='relu'))
+    model.add(Dropout(0.5))
     model.add(Dense(5, activation='softmax'))
     model.summary()
     model.compile(loss='categorical_crossentropy',
@@ -93,7 +94,7 @@ for f in df.index:
 
 classes = list(np.unique(df.labels))
 class_dist = df.groupby(['labels'])['length'].mean()
-n_samples = 4 * int(df['length'].sum() / 0.1) # 40 * total length of audio
+n_samples = 2 * int(df['length'].sum() / 0.1) # 40 * total length of audio
 prob_dist = class_dist / class_dist.sum()
 choices = np.random.choice(class_dist.index, p=prob_dist)
 
@@ -114,7 +115,7 @@ checkpoint = ModelCheckpoint(config.model_path, monitor='val_acc', verbose=1, mo
 
 model.fit(X, y, epochs=20, batch_size=32,
             shuffle=True, class_weight=class_weight,
-            validation_split=0.3, callbacks=[checkpoint])
+            validation_split=0.5, callbacks=[checkpoint])
 
 model.save(config.model_path)
 
