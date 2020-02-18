@@ -30,7 +30,7 @@ def build_rand_feat(df, split):
     tmp = check_data()
     if tmp and split == 'train':
         return tmp.data[0], tmp.data[1]
-    if tmp and split == 'test':
+    if tmp.data[2] and split == 'test':
         return tmp.data[2], tmp.data[3]
     config.data = [None, None, None, None]
     X = []
