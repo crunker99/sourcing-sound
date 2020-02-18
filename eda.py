@@ -66,7 +66,7 @@ import timeit
 
 def envelope(y, rate, threshold):
     y = pd.Series(y).apply(np.abs)
-    y_mean = y.rolling(window=int(rate/10), min_periods=1, center=True).mean()
+    y_mean = y.rolling(window=int(rate/5), min_periods=1, center=True).mean()
     mask = y_mean > threshold
     return mask
 
@@ -122,5 +122,12 @@ df.reset_index(inplace=True)
 if len(os.listdir('clean')) == 0:
     for f in tqdm(df.fname):
         signal, rate = librosa.load('audio/train/'+f, sr=16000)
-        mask = envelope(signal, rate, 0.001)
+        mask = envelope(signal, rate, 0.0005)
         wavfile.write(filename='clean/'+f, rate=rate, data=signal[mask])
+
+test_df = pd.read_csv('data/test/roadsound_labels.csv')
+if len(os.listdir('audio/test_roadsound')) == 0:
+    for f in tqdm(test_df.fname):
+        signal, rate = librosa.load('audio/test/'+f, sr=16000)
+        wavfile.write(filename='audio/test_roadsound/'+f, rate=rate, data=signal)
+
