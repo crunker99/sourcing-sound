@@ -32,10 +32,11 @@ def build_rand_feat(df, split):
         return tmp.data[0], tmp.data[1]
     if tmp and split == 'test':
         return tmp.data[2], tmp.data[3]
+    config.data = [None, None, None, None]
     X = []
     y = []
     _min, _max = float('inf'), -float('inf')
-    print('Building features of training data')
+    print('Building features for '+split)
     for _ in tqdm(range(n_samples)):
         rand_class = np.random.choice(classes, p=prob_dist)
         file = np.random.choice(df[df.labels == rand_class].index)
