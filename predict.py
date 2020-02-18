@@ -11,14 +11,14 @@ from tensorflow.keras.models import load_model
 from sklearn.metrics import accuracy_score, precision_score, recall_score
 
 
-def check_test_data():
-    if os.path.isfile(config.testdata):
-        print('Loading existing data for {} model'.format(config.mode))
-        with open(config.testdata, 'rb') as handle:
-            tmp = pickle.load(handle)
-            return tmp 
-    else:
-        return None
+# def check_test_data():
+#     if os.path.isfile(config.testdata):
+#         print('Loading existing data for {} model'.format(config.mode))
+#         with open(config.testdata, 'rb') as handle:
+#             tmp = pickle.load(handle)
+#             return tmp 
+#     else:
+#         return None
 
 def build_predictions(audio_dir):
     y_true = []
@@ -72,7 +72,7 @@ p_path = os.path.join('pickles', 'conv.p') ### configuration file
 with open(p_path, 'rb') as handle:
     config = pickle.load(handle)
 
-model = load_model(config.model_path)
+model = load_model('models/conv2.model')
 
 y_true, y_pred, fn_prob = build_predictions('audio/test_roadsound')
 
