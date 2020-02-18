@@ -76,5 +76,3 @@ y_pred_label = [classes[np.argmax(y)] for y in y_probs]
 df['y_pred'] = y_pred_label
 
 df.to_csv('predictions.csv', index=False)
-
-

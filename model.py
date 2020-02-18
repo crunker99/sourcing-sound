@@ -68,10 +68,11 @@ def get_conv_model():
     model.add(Conv2D(filters=16, kernel_size=(3, 3), activation='relu',
                     strides=(1,1), padding='same', input_shape=input_shape))    
     model.add(Conv2D(32, (3, 3), activation='relu', strides=(1,1),padding='same')) 
+    model.add(SpatialDropout2D(0.2))
     model.add(Conv2D(64, (3, 3), activation='relu', strides=(1,1),padding='same'))
     model.add(Conv2D(128, (3, 3), activation='relu', strides=(1,1), padding='same'))
     model.add(MaxPool2D((2,2)))
-    model.add(Dropout(0.5))
+    model.add(Dropout(0.2))
     model.add(Flatten())
     model.add(Dense(128, activation='relu'))
     model.add(Dropout(0.5))
@@ -111,9 +112,9 @@ class_weight = compute_class_weight('balanced',
 checkpoint = ModelCheckpoint(config.model_path, monitor='val_acc', verbose=1, mode='max',
                              save_best_only=True, save_weights_only=False, period=1)
 
-model.fit(X, y, epochs=10, batch_size=32,
+model.fit(X, y, epochs=20, batch_size=32,
             shuffle=True, class_weight=class_weight,
-            validation_split=0.2, callbacks=[checkpoint])
+            validation_split=0.3, callbacks=[checkpoint])
 
 model.save(config.model_path)
 
