@@ -6,14 +6,14 @@ class Config:
                 nfeat=13, 
                 nfft=512,
                 rate =16000,
-                n_mels=26,
+                n_mels=60,
                 feature_type='mels'):
         self.mode = mode
         self.nfilt = nfilt
         self.nfeat = nfeat
         self.nfft = nfft
         self.rate = rate
-        self.step = int(rate/5) # capture 1/10 second to make prediction
+        self.step = int(rate/4) #note: rate = 1 second
         self.n_mels = n_mels
         self.feature_type = feature_type
         self.model_path = os.path.join('models', mode + 'tt1.model')
