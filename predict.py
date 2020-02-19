@@ -39,7 +39,8 @@ def build_test_feat(audio_dir):
                 x = librosa.power_to_db(x)
             elif config.feature_type == 'mfccs':
                 x = mfcc(sample, rate, numcep=config.nfeat, nfilt=config.nfilt, nfft=config.nfft)
-
+            elif config.feature_type == 'raw':
+                x = sample
             x = (x - config.min) / (config.max - config.min)
 
             if config.mode == 'conv':

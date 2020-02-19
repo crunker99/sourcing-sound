@@ -4,7 +4,7 @@ import numpy as np
 from scipy.io import wavfile
 
 def get_single_labels(dir, subset:set = {}):
-    """"
+    """
     Selects only samples with one label, removes unneeded columns, 
     and drops corrupted samples.
     Parameters: dir : str
@@ -13,7 +13,7 @@ def get_single_labels(dir, subset:set = {}):
                 subset : array-like, default {}
                     Select only samples whose labels are in the set 
     Returns:    df: pandas DataFrame
-    """"
+    """
     df = pd.read_csv('data/{}/labels.csv'.format(dir))
     df.set_index('fname', inplace=True)
     df['labels'] = df['labels'].apply(lambda x: x.split(','))
