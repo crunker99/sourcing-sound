@@ -1,5 +1,6 @@
 import os
 from tqdm import tqdm
+from datetime import datetime
 import pandas as pd
 import numpy as np
 from scipy.io import wavfile
@@ -28,10 +29,12 @@ def check_data():
 
 def build_rand_feat(df, split):
     tmp = check_data()
-    if tmp and split == 'train':
-        return tmp.data[0], tmp.data[1]
-    elif split == 'test':
-        if tmp.data[2]:
+    if not tmp:
+        tmp = Config()
+        tmp.data = [None, None, None, None]
+    if split == 'train' and not tmp.data[0] is None:
+            return tmp.data[0], tmp.data[1]
+    elif split == 'test' and not tmp.data[2] is None:
             return tmp.data[2], tmp.data[3]
     config.data = [None, None, None, None]
     X = []
@@ -79,10 +82,10 @@ def get_conv_model():
     # model.add(Conv2D(64, (3, 3), activation='relu', strides=(1,1),padding='same'))
     # model.add(Conv2D(128, (3, 3), activation='relu', strides=(1,1), padding='same'))
     model.add(MaxPool2D((2,2)))
-    model.add(Dropout(0.2))
+    model.add(Dropout(0.5))
     model.add(Flatten())
     # model.add(Dense(128, activation='relu'))
-    model.add(Dropout(0.2))
+    model.add(Dropout(0.5))
     model.add(Dense(64, activation='relu'))
     model.add(Dropout(0.5))
     model.add(Dense(5, activation='softmax'))
@@ -108,7 +111,7 @@ choices = np.random.choice(class_dist.index, p=prob_dist)
 
 config = Config()
 
-df, test_df, _, _ = train_test_split(df, df.labels)
+df, test_df, _ , _ = train_test_split(df, df.labels)
 
 if config.mode == 'conv':
     X, y = build_rand_feat(df, 'train')
@@ -128,5 +131,9 @@ model.fit(X, y, epochs=10, batch_size=32,
             shuffle=True, class_weight=class_weight,
             validation_data =(X_test, y_test) , callbacks=[checkpoint])
 
+#if best model, save to .model_path
 model.save(config.model_path)
+#save all models anyway
+saved_model_path = "./models/10epochs_{}.h5".format(datetime.now().strftime("%Y%m%d")) # _%H%M%S 
+model.save(saved_model_path)
 

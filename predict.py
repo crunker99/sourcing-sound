@@ -43,7 +43,6 @@ def build_predictions(audio_dir):
                                             n_fft=config.nfft)
                 x = librosa.power_to_db(x)
             
-
             x = (x - config.min) / (config.max - config.min)
 
             if config.mode == 'conv':
@@ -72,7 +71,7 @@ p_path = os.path.join('pickles', 'conv.p') ### configuration file
 with open(p_path, 'rb') as handle:
     config = pickle.load(handle)
 
-model = load_model('models/conv2.model')
+model = load_model('models/10epochs_20200218.h5')
 
 y_true, y_pred, fn_prob = build_predictions('audio/test_roadsound')
 
