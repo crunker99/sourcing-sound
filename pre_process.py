@@ -19,7 +19,7 @@ def get_single_labels(dir, subset:set = {}):
     df['labels'] = df['labels'].apply(lambda x: x.split(','))
     df = df[df['labels'].map(len) == 1]
     df['labels'] = df['labels'].apply(lambda x: ''.join(x))
-    df.drop(['freesound_id', 'license'], 1, inplace=True)
+    #df.drop(['freesound_id', 'license'], 1, inplace=True)
     df = df[df['labels'].isin(subset)]
     #drop corrupted files
     for f in tqdm(df.index):
@@ -39,7 +39,7 @@ if __name__ == "__main__":
     train_df.to_csv('data/train/roadsound_labels.csv')
 
     train_noisy_df = get_single_labels(dir='train_noisy', subset=roadsound)
-    train__noisy_df.to_csv('data/train_noisy/roadsound_labels.csv')
+    train_noisy_df.to_csv('data/train_noisy/roadsound_labels.csv')
 
     test_df = get_single_labels(dir='test', subset=roadsound)
     test_df.to_csv('data/test/roadsound_labels.csv')
