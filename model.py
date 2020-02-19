@@ -54,7 +54,7 @@ def build_rand_feat(df, split):
             X_sample = melspectrogram(sample, rate, n_mels=config.n_mels,
                                         n_fft=config.nfft)
             X_sample = librosa.power_to_db(X_sample)
-        elif config.feature_type = 'raw':
+        elif config.feature_type == 'raw':
             X_sample = sample
         _min = min(np.amin(X_sample), _min)
         _max = max(np.amax(X_sample), _max)
