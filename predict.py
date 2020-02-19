@@ -120,7 +120,7 @@ p_path = os.path.join('pickles', 'conv.p') ### configuration file
 with open(p_path, 'rb') as handle:
     config = pickle.load(handle)
 
-model = load_model('models/10epochs_20200218.h5')
+model = load_model(config.model_path)
 
 y_true, y_pred, fn_prob = build_predictions('audio/test_roadsound')
 
