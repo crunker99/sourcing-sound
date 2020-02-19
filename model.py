@@ -98,7 +98,9 @@ def get_conv_model():
     return model
 
 
-df = pd.read_csv('data/train/roadsound_labels.csv', index_col=0)
+cur_df = pd.read_csv('data/train/roadsound_labels.csv', index_col=0)
+noisy_df = pd.read_csv('data/train_noisy/roadsound_labels.csv', index_col=0)
+df = pd.concat([cur_df, noisy_df])
 df.set_index('fname', inplace=True)
 for f in df.index:
     rate, signal = wavfile.read('clean/'+f)
