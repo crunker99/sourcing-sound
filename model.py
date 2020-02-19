@@ -80,14 +80,14 @@ def get_conv_model():
     model.add(Conv2D(32, (3, 3), activation='relu', strides=(1,1),padding='same')) 
     model.add(SpatialDropout2D(0.2))
     model.add(Conv2D(64, (3, 3), activation='relu', strides=(1,1),padding='same'))
-    model.add(Conv2D(128, (3, 3), activation='relu', strides=(1,1), padding='same'))
+    # model.add(Conv2D(128, (3, 3), activation='relu', strides=(1,1), padding='same'))
     model.add(MaxPool2D((2,2)))
     model.add(Dropout(0.5))
     model.add(Flatten())
-    model.add(Dense(128, activation='relu'))
+    # model.add(Dense(128, activation='relu'))
     model.add(Dropout(0.5))
     model.add(Dense(64, activation='relu'))
-    model.add(Dropout(0.5))
+    # model.add(Dropout(0.5))
     model.add(Dense(5, activation='softmax'))
     model.summary()
     model.compile(loss='categorical_crossentropy',
@@ -127,7 +127,7 @@ class_weight = compute_class_weight('balanced',
 checkpoint = ModelCheckpoint(config.model_path, monitor='val_acc', verbose=1, mode='max',
                              save_best_only=True, save_weights_only=False, period=1)
 
-model.fit(X, y, epochs=10, batch_size=32,
+model.fit(X, y, epochs=20, batch_size=16,
             shuffle=True, class_weight=class_weight,
             validation_data =(X_test, y_test) , callbacks=[checkpoint])
 
