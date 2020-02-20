@@ -13,7 +13,7 @@ class Config:
         self.nfeat = nfeat
         self.nfft = nfft
         self.rate = rate
-        self.step = int(rate/4) #note: rate = 1 second
+        self.step = int(rate/10) #note: rate = 1 second
         self.n_mels = n_mels
         self.feature_type = feature_type
         self.model_path = os.path.join('models', mode + 'tt1.model')
