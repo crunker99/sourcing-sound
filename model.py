@@ -77,7 +77,7 @@ df = df[df.length > config.step/rate]
 
 classes = list(np.unique(df.labels))
 class_dist = df.groupby(['labels'])['length'].mean()
-n_samples = 2 * int(df['length'].sum() / 0.1) # 40 * total length of audio
+# n_samples = 2 * int(df['length'].sum() / 0.1) # 40 * total length of audio
 prob_dist = class_dist / class_dist.sum()
 choices = np.random.choice(class_dist.index, p=prob_dist)
 
