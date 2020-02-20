@@ -1,9 +1,13 @@
 import os
 from tqdm import tqdm
+import pandas as pd
+import numpy as np
 from scipy.io import wavfile
 from python_speech_features import mfcc
+import librosa
 from librosa.feature import melspectrogram
 import pickle
+from tensorflow.keras.utils import to_categorical
 
 from cfg import Config
 
@@ -18,38 +22,53 @@ def check_data():
     else:
         return None
 
-def build_rand_feat():
+def build_rand_feat(df, split):
     tmp = check_data()
-    if tmp:
-        return tmp.data[0], tmp.data[1]
+    if not tmp:
+        tmp = Config()
+        tmp.data = [None, None, None, None]
+    if split == 'train' and not tmp.data[0] is None:
+            return tmp.data[0], tmp.data[1]
+    elif split == 'test' and not tmp.data[2] is None:
+            return tmp.data[2], tmp.data[3]
+    config.data = [None, None, None, None]
     X = []
     y = []
     _min, _max = float('inf'), -float('inf')
+    print('Building features for '+split)
     for _ in tqdm(range(n_samples)):
         rand_class = np.random.choice(classes, p=prob_dist)
         file = np.random.choice(df[df.labels == rand_class].index)
-        rate, wav = wavfile.read('clean/'+f)
+        rate, wav = wavfile.read('clean/'+file)
         rand_index = np.random.randint(0, wav.shape[0] - config.step)
         sample = wav[rand_index:rand_index + config.step]
+        if config.pca == True:
+            pca = PCA(n_components=20, random_state=1738)
+            ##############
         if config.feature_type == 'mfccs':
             X_sample = mfcc(sample, rate, numcep=config.nfeat,
                             nfilt=config.nfilt, nfft = config.nfft)
-        elif config.feature_type == 'mffcs':
+        elif config.feature_type == 'mels':
             X_sample = melspectrogram(sample, rate, n_mels=config.n_mels,
                                         n_fft=config.nfft)
+            X_sample = librosa.power_to_db(X_sample)
+        elif config.feature_type == 'raw':
+            X_sample = sample
         _min = min(np.amin(X_sample), _min)
         _max = max(np.amax(X_sample), _max)
         X.append(X_sample)
         y.append(classes.index(rand_class)) # encoding integer values for classes
     config.min = _min
-    config.min = _max
+    config.max = _max
     X, y = np.array(X), np.array(y)
     X = (X - _min) / (_max - _min)
     X = X.reshape(X.shape[0], X.shape[1], X.shape[2], 1)
     y = to_categorical(y)
-    config.data = (X, y)
+    if split == 'train':
+        config.data[0], config.data[1] = (X, y)
+    elif split == 'test':
+        config.data[2], config.data[3] = (X, y)
 
     with open(config.p_path, 'wb') as handle:
         pickle.dump(config, handle, protocol=2)
-
     return X, y

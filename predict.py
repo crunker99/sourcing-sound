@@ -34,6 +34,9 @@ def build_test_feat(audio_dir):
 
         for i in range(0, wav.shape[0] - config.step, config.step):
             sample = wav[i:i + config.step]
+            if config.pca == True:
+                pca = config.pca
+                sample = pca.transform(sample)
             if config.feature_type == 'mels':
                 x = melspectrogram(sample, rate, n_mels=config.n_mels, n_fft=config.nfft)
                 x = librosa.power_to_db(x)
