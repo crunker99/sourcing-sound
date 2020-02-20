@@ -8,7 +8,6 @@ import librosa
 from librosa.feature import melspectrogram
 import pickle
 from tensorflow.keras.utils import to_categorical
-
 from cfg import Config
 
 config = Config()
@@ -29,11 +28,17 @@ def build_rand_feat(df, split):
         tmp.data = [None, None, None, None]
     if split == 'train' and not tmp.data[0] is None:
             return tmp.data[0], tmp.data[1]
-    elif split == 'test' and not tmp.data[2] is None:
+    elif split == 'val' and not tmp.data[2] is None:
             return tmp.data[2], tmp.data[3]
     config.data = [None, None, None, None]
+    
     X = []
     y = []
+    n_samples = 2 * int(df['length'].sum() / 0.1)
+    classes = list(np.unique(df.labels))
+    class_dist = df.groupby(['labels'])['length'].mean()
+    prob_dist = class_dist / class_dist.sum()
+
     _min, _max = float('inf'), -float('inf')
     print('Building features for '+split)
     for _ in tqdm(range(n_samples)):
@@ -42,8 +47,8 @@ def build_rand_feat(df, split):
         rate, wav = wavfile.read('clean/'+file)
         rand_index = np.random.randint(0, wav.shape[0] - config.step)
         sample = wav[rand_index:rand_index + config.step]
-        if config.pca == True:
-            pca = PCA(n_components=20, random_state=1738)
+        # if config.pca == True:
+        #     pca = PCA(n_components=20, random_state=1738)
             ##############
         if config.feature_type == 'mfccs':
             X_sample = mfcc(sample, rate, numcep=config.nfeat,
@@ -56,7 +61,7 @@ def build_rand_feat(df, split):
             X_sample = sample
         _min = min(np.amin(X_sample), _min)
         _max = max(np.amax(X_sample), _max)
-        X.append(X_sample)
+        X.append(X_sample if config.mode=='conv' else X_sample.T)
         y.append(classes.index(rand_class)) # encoding integer values for classes
     config.min = _min
     config.max = _max
@@ -66,9 +71,12 @@ def build_rand_feat(df, split):
     y = to_categorical(y)
     if split == 'train':
         config.data[0], config.data[1] = (X, y)
-    elif split == 'test':
+    elif split == 'val':
         config.data[2], config.data[3] = (X, y)
 
     with open(config.p_path, 'wb') as handle:
         pickle.dump(config, handle, protocol=2)
     return X, y
+
+if __name__ == '__main__':
+    pass

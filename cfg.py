@@ -1,7 +1,7 @@
 import os
 
 class Config:
-    def __init__(self, mode='conv', 
+    def __init__(self, mode='time', 
                 nfilt=26,
                 nfeat=13, 
                 nfft=512,
