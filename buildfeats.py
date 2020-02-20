@@ -61,7 +61,7 @@ def build_rand_feat(df, split):
             X_sample = sample
         _min = min(np.amin(X_sample), _min)
         _max = max(np.amax(X_sample), _max)
-        X.append(X_sample if config.mode=='conv' else X_sample.T)
+        X.append(X_sample if config.mode== 'conv' else X_sample.T)
         y.append(classes.index(rand_class)) # encoding integer values for classes
     config.min = _min
     config.max = _max
