@@ -124,7 +124,7 @@ noisy_df.reset_index(inplace=True)
 if len(os.listdir('clean')) == 0:
     for f in tqdm(df.fname):
         signal, rate = librosa.load('audio/train/'+f, sr=16000)
-        mask = envelope(signal, rate, 0.0005)
+        mask = envelope(signal, rate, 0.00005)
         wavfile.write(filename='clean/'+f, rate=rate, data=signal[mask])
     for f in tqdm(noisy_df.fname):
         signal, rate = librosa.load('audio/train_noisy/'+f, sr=16000)

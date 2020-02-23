@@ -116,15 +116,16 @@ def build_predictions_orig(audio_dir):
 
     return y_true, y_pred, fn_prob
 
+
 df = pd.read_csv('data/test/roadsound_labels.csv', index_col=0)
 classes = list(np.unique(df.labels))
 fn2class = dict(zip(df.fname, df.labels))
-p_path = os.path.join('pickles', 'conv.p') ### configuration file
+p_path = os.path.join('pickles', 'timemels.p') ### configuration file
 
 with open(p_path, 'rb') as handle:
     config = pickle.load(handle)
 
-model = load_model(config.model_path)
+model = load_model('100epochs_20200223.h5')
 
 y_true, y_pred, fn_prob = build_predictions('audio/test_roadsound')
 
