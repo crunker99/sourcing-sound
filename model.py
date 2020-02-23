@@ -95,6 +95,7 @@ elif config.mode == 'time':
     X, y = buildfeats.build_rand_feat(df, 'train')
     X_test, y_test = buildfeats.build_rand_feat(test_df, 'val')
     y_flat = np.argmax(y, axis=1) # create an array of integer labels
+    input_shape = (X.shape[1], X.shape[2])
     model = get_recurrent_model()
 
 class_weight = compute_class_weight('balanced',
