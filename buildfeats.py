@@ -27,7 +27,7 @@ def build_rand_feat(path, df, split):
     if tmp:
         return tmp.data[0], tmp.data[1]
     # config.data = [None, None, None, None]
-    n_samples = 1 * int(df['length'].sum() / 0.1)
+    n_samples = 1 * int(df['length'].sum() / 1000) 
     classes = list(np.unique(df.labels))
     class_dist = df.groupby(['labels'])['length'].mean()
     prob_dist = class_dist / class_dist.sum()
