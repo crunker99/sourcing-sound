@@ -83,16 +83,16 @@ choices = np.random.choice(class_dist.index, p=prob_dist)
 df, test_df, _, _ = train_test_split(df, df.labels)
 
 if config.mode == 'conv':
-    X, y = build_rand_feat(config, df, 'train')
-    X_test, y_test = build_rand_feat(config, test_df, 'val')
+    X, y = build_rand_feat(config.p_path, df, 'train')
+    X_test, y_test = build_rand_feat(config.val_p_path, test_df, 'val')
     y_flat = np.argmax(y, axis=1) # create an array of integer labels
     input_shape = (X.shape[1], X.shape[2])
     model = get_conv_model()
 
 elif config.mode == 'time':
     print('mode is time(recurrent)')
-    X, y = build_rand_feat(df, 'train')
-    X_test, y_test = build_rand_feat(test_df, 'val')
+    X, y = build_rand_feat(config.p_path, df, 'train')
+    X_test, y_test = build_rand_feat(config.val_p_path, test_df, 'val')
     y_flat = np.argmax(y, axis=1) # create an array of integer labels
     input_shape = (X.shape[1], X.shape[2])
     model = get_recurrent_model()
