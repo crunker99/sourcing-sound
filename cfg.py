@@ -18,6 +18,6 @@ class Config:
         self.n_mels = n_mels
         self.feature_type = feature_type
         self.model_path = os.path.join('models', mode + feature_type + '.model')
-        self.p_path = os.path.join('pickles', mode + feature_type +'.p')
-        self.val_p_path = os.path.join('pickles', mode + feature_type +'_val.p')
+        self.p_path = os.path.join('pickles', mode + feature_type + '.p')
+        self.val_p_path = os.path.join('pickles', mode + feature_type + '_val.p')
         self.test_p_path = os.path.join('pickles', mode + feature_type + '_test.p')

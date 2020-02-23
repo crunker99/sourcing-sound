@@ -67,12 +67,7 @@ def build_rand_feat(path, df, split):
         X = X.reshape(X.shape[0], X.shape[1], X.shape[2])
     y = to_categorical(y)
 
-    if split == 'train':
-        config.data = [None, None]
-        config.data[0], config.data[1] = (X, y)
-    elif split == 'val':
-        config.data.append(X)
-        config.data.append(y)
+    config.data = (X, y)
 
     with open(path, 'wb') as handle:
         pickle.dump(config, handle, protocol=2)
