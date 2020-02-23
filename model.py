@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 from scipy.io import wavfile
 import tensorflow as tf
-from tf.keras.layers import Conv2D, MaxPool2D, Flatten
+from tensorflow.keras.layers import Conv2D, MaxPool2D, Flatten
 from tensorflow.keras.layers import LSTM, TimeDistributed
 from tensorflow.keras.layers import Dropout, SpatialDropout2D, Dense
 from tensorflow.keras.models import Sequential
@@ -120,8 +120,8 @@ model.fit(X, y, epochs=n_epochs, batch_size=batch_size,
             validation_data =(X_test, y_test) , callbacks=[checkpoint])
 
 #if best model, save to .model_path
-tensorflow.saved_model.save(model, config.model_path)
+tf.saved_model.save(model, config.model_path)
 #save all models anyway
 saved_model_path = "./models/{}epochs_{}.h5".format(n_epochs, datetime.now().strftime("%Y%m%d")) # _%H%M%S 
-tensorflow.saved_model.save(model, saved_model_path)
+tf.saved_model.save(model, saved_model_path)
 
