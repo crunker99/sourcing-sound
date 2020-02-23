@@ -119,8 +119,8 @@ model.fit(X, y, epochs=n_epochs, batch_size=batch_size,
             validation_data =(X_test, y_test) , callbacks=[checkpoint])
 
 #if best model, save to .model_path
-model.save(config.model_path)
+tensorflow.saved_model.save(model, config.model_path)
 #save all models anyway
 saved_model_path = "./models/{}epochs_{}.h5".format(n_epochs, datetime.now().strftime("%Y%m%d")) # _%H%M%S 
-model.save(saved_model_path)
+tensorflow.saved_model.save(model, saved_model_path)
 
