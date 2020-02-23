@@ -104,19 +104,19 @@ class_weight = compute_class_weight('balanced',
                                     np.unique(y_flat),
                                     y_flat)
 
-n_epochs = 10
+n_epochs = 50
 batch_size = 32
 
 checkpoint = ModelCheckpoint(config.model_path, monitor='val_acc', verbose=1, mode='max',
                              save_best_only=True, save_weights_only=False, period=1)
 
-tensorboard = TensorBoard(log_dir='./logs', histogram_freq=2, 
-                        batch_size=batch_size, write_graph=True, 
-                        write_grads=True, write_images=True)
+# tensorboard = TensorBoard(log_dir='./logs', histogram_freq=2, 
+#                         batch_size=batch_size, write_graph=True, 
+#                         write_grads=True, write_images=True)
 
 model.fit(X, y, epochs=n_epochs, batch_size=batch_size,
             shuffle=True, class_weight=class_weight,
-            validation_data =(X_test, y_test) , callbacks=[checkpoint, tensorboard])
+            validation_data =(X_test, y_test) , callbacks=[checkpoint])
 
 #if best model, save to .model_path
 model.save(config.model_path)
