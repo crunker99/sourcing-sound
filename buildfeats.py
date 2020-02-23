@@ -34,7 +34,7 @@ def build_rand_feat(df, split):
     
     X = []
     y = []
-    n_samples = 2 * int(df['length'].sum() / 0.1)
+    n_samples = 1 * int(df['length'].sum() / 0.1)
     classes = list(np.unique(df.labels))
     class_dist = df.groupby(['labels'])['length'].mean()
     prob_dist = class_dist / class_dist.sum()

@@ -91,6 +91,7 @@ if config.mode == 'conv':
     model = get_conv_model()
 
 elif config.mode == 'time':
+    print('mode is time(recurrent)')
     X, y = buildfeats.build_rand_feat(df, 'train')
     X_test, y_test = buildfeats.build_rand_feat(test_df, 'val')
     y_flat = np.argmax(y, axis=1) # create an array of integer labels
