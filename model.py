@@ -105,7 +105,7 @@ class_weight = compute_class_weight('balanced',
                                     np.unique(y_flat),
                                     y_flat)
 
-n_epochs = 3
+n_epochs = 100
 batch_size = 128
 
 checkpoint = ModelCheckpoint(config.model_path, monitor='val_acc', verbose=1, mode='max',
