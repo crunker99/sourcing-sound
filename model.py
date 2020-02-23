@@ -98,9 +98,15 @@ elif config.mode == 'time':
     input_shape = (X.shape[1], X.shape[2])
     model = get_recurrent_model()
 
+with open(config.p_path, 'wb') as handle:
+    pickle.dump(config, handle, protocol=2)
+    
 class_weight = compute_class_weight('balanced',
                                     np.unique(y_flat),
                                     y_flat)
+
+n_epochs = 10
+batch_size = 32
 
 checkpoint = ModelCheckpoint(config.model_path, monitor='val_acc', verbose=1, mode='max',
                              save_best_only=True, save_weights_only=False, period=1)
@@ -109,9 +115,6 @@ tensorboard = TensorBoard(log_dir='./logs', histogram_freq=2,
                         batch_size=batch_size, write_graph=True, 
                         write_grads=True, write_images=True)
 
-
-n_epochs = 10
-batch_size = 32
 model.fit(X, y, epochs=n_epochs, batch_size=batch_size,
             shuffle=True, class_weight=class_weight,
             validation_data =(X_test, y_test) , callbacks=[checkpoint, tensorboard])

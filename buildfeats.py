@@ -74,8 +74,8 @@ def build_rand_feat(df, split):
     elif split == 'val':
         config.data[2], config.data[3] = (X, y)
 
-    with open(config.p_path, 'wb') as handle:
-        pickle.dump(config, handle, protocol=2)
+    # with open(config.p_path, 'wb') as handle:
+    #     pickle.dump(config, handle, protocol=2)
     return X, y
 
 if __name__ == '__main__':
