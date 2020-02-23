@@ -54,7 +54,7 @@ def get_recurrent_model():
     model.add(TimeDistributed(Dense(16, activation='relu')))
     model.add(TimeDistributed(Dense(8, activation='relu')))
     model.add(Flatten())
-    model.add(Dense(5, activtion='softmax'))
+    model.add(Dense(5, activation='softmax'))
     model.summary()
     model.compile(loss='categorical_crossentropy',
                 optimizer='adam',
