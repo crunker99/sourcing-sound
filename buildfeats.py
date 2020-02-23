@@ -15,7 +15,7 @@ config = Config()
 
 def check_data(path):
     if os.path.isfile(path):
-        print('Loading existing data for {} model'.format(config.mode))
+        print('Loading existing data for {} model from {}'.format(config.mode, path))
         with open(path, 'rb') as handle:
             tmp = pickle.load(handle)
             return tmp 
