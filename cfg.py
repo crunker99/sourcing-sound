@@ -17,7 +17,7 @@ class Config:
         self.step = int(rate/5) #note: rate = 1 second
         self.n_mels = n_mels
         self.feature_type = feature_type
-        self.model_path = os.path.join('models', mode + feature_type + '.model')
+        self.model_path = os.path.join('models', mode + feature_type + '.h5')
         self.p_path = os.path.join('pickles', mode + feature_type + '.p')
         self.val_p_path = os.path.join('pickles', mode + feature_type + '_val.p')
         self.test_p_path = os.path.join('pickles', mode + feature_type + '_test.p')
