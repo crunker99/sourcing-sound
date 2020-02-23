@@ -81,7 +81,7 @@ class_dist = df.groupby(['labels'])['length'].mean()
 prob_dist = class_dist / class_dist.sum()
 choices = np.random.choice(class_dist.index, p=prob_dist)
 
-df, test_df, _ , _ = train_test_split(df, df.labels)
+df, test_df, _, _ = train_test_split(df, df.labels)
 
 if config.mode == 'conv':
     X, y = buildfeats.build_rand_feat(df, 'train')
@@ -100,7 +100,7 @@ elif config.mode == 'time':
 
 with open(config.p_path, 'wb') as handle:
     pickle.dump(config, handle, protocol=2)
-    
+
 class_weight = compute_class_weight('balanced',
                                     np.unique(y_flat),
                                     y_flat)

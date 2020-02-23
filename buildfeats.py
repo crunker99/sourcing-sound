@@ -67,7 +67,10 @@ def build_rand_feat(df, split):
     config.max = _max
     X, y = np.array(X), np.array(y)
     X = (X - _min) / (_max - _min)
-    X = X.reshape(X.shape[0], X.shape[1], X.shape[2], 1)
+    if config.mode == 'conv':
+        X = X.reshape(X.shape[0], X.shape[1], X.shape[2], 1)
+    elif config.mode == 'time':
+        X = X.reshape(X.shape[0], X.shape[1], X.shape[2])
     y = to_categorical(y)
     if split == 'train':
         config.data[0], config.data[1] = (X, y)
