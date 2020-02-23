@@ -27,7 +27,7 @@ def build_rand_feat(path, df, split):
     if tmp:
         return tmp.data[0], tmp.data[1]
     # config.data = [None, None, None, None]
-    n_samples = 1 * int(df['length'].sum() / 1000) 
+    n_samples = 1 * int(df['length'].sum() / 100) 
     classes = list(np.unique(df.labels))
     class_dist = df.groupby(['labels'])['length'].mean()
     prob_dist = class_dist / class_dist.sum()
@@ -55,7 +55,7 @@ def build_rand_feat(path, df, split):
 
         _min = min(np.amin(X_sample), _min)
         _max = max(np.amax(X_sample), _max)
-        X.append(X_sample if config.mode== 'conv' else X_sample.T)
+        X.append(X_sample)   ### if config.mode== 'conv' else X_sample.T
         y.append(classes.index(rand_class)) # encoding integer values for classes
     config.min = _min
     config.max = _max
@@ -68,9 +68,9 @@ def build_rand_feat(path, df, split):
     y = to_categorical(y)
 
     config.data = (X, y)
-
     with open(path, 'wb') as handle:
         pickle.dump(config, handle, protocol=3)
+        
     return X, y
 
 if __name__ == '__main__':

@@ -94,30 +94,30 @@ elif config.mode == 'time':
     print('mode is time(recurrent)')
     X, y = build_rand_feat(config.p_path, df, 'train')
     X_test, y_test = build_rand_feat(config.val_p_path, test_df, 'val')
-    y_flat = np.argmax(y, axis=1) # create an array of integer labels
+    y_flat = np.argmax(y, axis=1) 
     input_shape = (X.shape[1], X.shape[2])
     model = get_recurrent_model()
 
-with open(config.p_path, 'wb') as handle:
-    pickle.dump(config, handle, protocol=2)
+# with open(config.p_path, 'wb') as handle:   ### unnecessary if dumping via build_rand_feats
+#     pickle.dump(config, handle, protocol=2)
 
 class_weight = compute_class_weight('balanced',
                                     np.unique(y_flat),
                                     y_flat)
 
-n_epochs = 1
+n_epochs = 3
 batch_size = 128
 
 checkpoint = ModelCheckpoint(config.model_path, monitor='val_acc', verbose=1, mode='max',
                              save_best_only=True, save_weights_only=False, period=1)
 
-# tensorboard = TensorBoard(log_dir='./logs', histogram_freq=2, 
-#                         batch_size=batch_size, write_graph=True, 
-#                         write_grads=True, write_images=True)
+tensorboard = TensorBoard(log_dir='./logs', histogram_freq=2, 
+                        batch_size=batch_size, write_graph=True, 
+                        write_grads=True, write_images=True)
 
 model.fit(X, y, epochs=n_epochs, batch_size=batch_size,
             shuffle=True, class_weight=class_weight,
-            validation_data =(X_test, y_test) , callbacks=[checkpoint])
+            validation_data =(X_test, y_test) , callbacks=[checkpoint, tensorboard])
 
 #if best model, save to .model_path
 tf.saved_model.save(model, config.model_path)
