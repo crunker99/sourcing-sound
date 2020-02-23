@@ -30,7 +30,7 @@ def build_rand_feat(df, split):
             return tmp.data[0], tmp.data[1]
     elif split == 'val' and not tmp.data[2] is None:
             return tmp.data[2], tmp.data[3]
-    config.data = [None, None, None, None]
+    # config.data = [None, None, None, None]
     
     X = []
     y = []
