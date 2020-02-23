@@ -11,9 +11,9 @@ import pickle
 from tensorflow.keras.utils import to_categorical
 from cfg import Config
 
-config = Config()
+# config = Config()
 
-def check_data():
+def check_data(config):
     if os.path.isfile(config.p_path):
         print('Loading existing data for {} model'.format(config.mode))
         with open(config.p_path, 'rb') as handle:
@@ -22,8 +22,8 @@ def check_data():
     else:
         return None
 
-def build_rand_feat(df, split):
-    tmp = check_data()
+def build_rand_feat(config, df, split):
+    tmp = check_data(config)
     if not tmp:
         tmp = Config()
         tmp.data = defaultdict(list)
@@ -73,7 +73,7 @@ def build_rand_feat(df, split):
     y = to_categorical(y)
 
     if split == 'train':
-        config.data = [0, 0, 0, 0]
+        config.data = [None, None]
         config.data[0], config.data[1] = (X, y)
     elif split == 'val':
         config.data.append(X)

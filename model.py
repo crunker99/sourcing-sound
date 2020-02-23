@@ -19,8 +19,7 @@ import librosa
 from librosa.feature import melspectrogram
 
 from cfg import Config
-
-import buildfeats
+from buildfeats import build_rand_feat
 
 def get_conv_model():
     model = Sequential()
@@ -84,8 +83,8 @@ choices = np.random.choice(class_dist.index, p=prob_dist)
 df, test_df, _, _ = train_test_split(df, df.labels)
 
 if config.mode == 'conv':
-    X, y = buildfeats.build_rand_feat(df, 'train')
-    X_test, y_test = buildfeats.build_rand_feat(test_df, 'val')
+    X, y = buildfeats.build_rand_feat(config, df, 'train')
+    X_test, y_test = buildfeats.build_rand_feat(config, test_df, 'val')
     y_flat = np.argmax(y, axis=1) # create an array of integer labels
     input_shape = (X.shape[1], X.shape[2])
     model = get_conv_model()
