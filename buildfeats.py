@@ -70,7 +70,7 @@ def build_rand_feat(path, df, split):
     config.data = (X, y)
 
     with open(path, 'wb') as handle:
-        pickle.dump(config, handle, protocol=2)
+        pickle.dump(config, handle, protocol=3)
     return X, y
 
 if __name__ == '__main__':
