@@ -4,7 +4,8 @@ from datetime import datetime
 import pandas as pd
 import numpy as np
 from scipy.io import wavfile
-from tensorflow.keras.layers import Conv2D, MaxPool2D, Flatten
+import tensorflow as tf
+from tf.keras.layers import Conv2D, MaxPool2D, Flatten
 from tensorflow.keras.layers import LSTM, TimeDistributed
 from tensorflow.keras.layers import Dropout, SpatialDropout2D, Dense
 from tensorflow.keras.models import Sequential
