@@ -98,14 +98,12 @@ elif config.mode == 'time':
     input_shape = (X.shape[1], X.shape[2])
     model = get_recurrent_model()
 
-# with open(config.p_path, 'wb') as handle:   ### unnecessary if dumping via build_rand_feats
-#     pickle.dump(config, handle, protocol=2)
 
 class_weight = compute_class_weight('balanced',
                                     np.unique(y_flat),
                                     y_flat)
 
-n_epochs = 100
+n_epochs = 2
 batch_size = 128
 
 checkpoint = ModelCheckpoint(config.model_path, monitor='val_acc', verbose=1, mode='max',
@@ -119,9 +117,9 @@ model.fit(X, y, epochs=n_epochs, batch_size=batch_size,
             shuffle=True, class_weight=class_weight,
             validation_data =(X_test, y_test) , callbacks=[checkpoint, tensorboard])
 
-#if best model, save to .model_path
-# tf.saved_model.save(model, config.model_path)
+#if best model, save to config.model_path
+model.save(model, config.model_path)
 #save all models anyway
-saved_model_path = "./models/{}epochs_{}.h5".format(n_epochs, datetime.now().strftime("%Y%m%d")) # _%H%M%S 
-tf.saved_model.save(model, saved_model_path)
+datetime_model_path = "./models/{}epochs_{}.h5".format(n_epochs, datetime.now().strftime("%Y%m%d")) # _%H%M%S 
+model.save(model, datetime_model_path)
 
