@@ -11,7 +11,7 @@ import pickle
 from tensorflow.keras.utils import to_categorical
 from cfg import Config
 
-config = Config()
+# config = Config()
 
 def check_data(path):
     if os.path.isfile(path):
@@ -26,7 +26,7 @@ def build_rand_feat(path, df, split):
     tmp = check_data(path)
     if tmp:
         return tmp.data[0], tmp.data[1]
-    # config.data = [None, None, None, None]
+    config = Config()
     n_samples = 1 * int(df['length'].sum() / 100) 
     classes = list(np.unique(df.labels))
     class_dist = df.groupby(['labels'])['length'].mean()

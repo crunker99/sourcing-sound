@@ -62,7 +62,7 @@ def get_recurrent_model():
     return model
 
 
-config = Config()
+config = Config(mode='conv')
 
 cur_df = pd.read_csv('data/train/roadsound_labels.csv', index_col=0)
 noisy_df = pd.read_csv('data/train_noisy/roadsound_labels.csv', index_col=0)
@@ -109,7 +109,8 @@ batch_size = 128
 checkpoint = ModelCheckpoint(config.model_path, monitor='val_acc', verbose=1, mode='max',
                              save_best_only=True, save_weights_only=False, period=1)
 
-tensorboard = TensorBoard(log_dir='./logs', histogram_freq=2, 
+log_dir="logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+tensorboard = TensorBoard(log_dir=log_dir, histogram_freq=2, 
                         batch_size=batch_size, write_graph=True, 
                         write_grads=True, write_images=True)
 
