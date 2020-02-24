@@ -54,7 +54,7 @@ def plot_fbank(fbank):
 def plot_mfccs(mfccs):
     fig, axs = plt.subplots(2, 2, sharex=False,
                             sharey=True, figsize=(20,5))
-    fig.suptitle('Filter Bank Coefficients', size=16)
+    fig.suptitle('MFCCs', size=16)
     idx = 0
     for i in range(2):
         for j in range(2):
@@ -89,9 +89,9 @@ for f in tqdm(df.index):
     rate, signal = wavfile.read('audio/train/'+f)
     df.at[f, 'length'] = signal.shape[0] / rate
 
-# classes = list(np.unique(df.labels))
-# class_dist = df.groupby(['labels'])['length'].mean().sort_values()
-# n_classes = len(classes)
+classes = list(np.unique(df.labels))
+class_dist = df.groupby(['labels'])['length'].mean().sort_values()
+n_classes = len(classes)
 
 # #Bar graph showing average length of class samples
 # fig, ax = plt.subplots(figsize=(6, 4))
@@ -101,7 +101,7 @@ for f in tqdm(df.index):
 # ax.set_ylabel('Class')
 # plt.tight_layout()
 # # plt.show()    
-# df.reset_index(inplace=True)
+df.reset_index(inplace=True)
 # noisy_df.reset_index(inplace=True)
 
 signals = {}
@@ -109,21 +109,21 @@ fft = {}
 fbank = {}
 mfccs = {}
 
-# # Plotting examples of each class
-# for c in tqdm(classes):
-#     wav_file = df[df.labels == c].iloc[0, 0]
-#     signal, rate = librosa.load('audio/train/'+wav_file, sr=22050)
-#     mask = envelope(signal, rate, 0.0005)
-#     signal = signal[mask]
-#     signals[c] = signal
-#     fft[c] = calc_fft(signal, rate)
-#     fbank[c] = logfbank(signal[:rate], rate, nfilt=26, nfft=1103).T
-#     mfccs[c] = mfcc(signal[:rate], rate, numcep=26, nfilt=26, nfft=1103).T
+# Plotting examples of each class
+for c in tqdm(classes):
+    wav_file = df[df.labels == c].iloc[0, 0]
+    signal, rate = librosa.load('audio/train/'+wav_file, sr=22050)
+    mask = envelope(signal, rate, 0.0005)
+    signal = signal[mask]
+    signals[c] = signal
+    fft[c] = calc_fft(signal, rate)
+    fbank[c] = logfbank(signal[:rate], rate, nfilt=26, nfft=1103).T
+    mfccs[c] = mfcc(signal[:rate], rate, numcep=26, nfilt=26, nfft=1103).T
 
 # plot_signals(signals)
 # plot_fft(fft)
 # plot_fbank(fbank)
-# plot_mfccs(mfccs)
+plot_mfccs(mfccs)
 # plt.show()
 
 # if len(os.listdir('clean')) == 0:
