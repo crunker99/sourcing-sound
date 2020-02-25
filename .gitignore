@@ -147,10 +147,12 @@ Thumbs.db
 /data/mel_images/
 /data/train_df.joblib
 /data/X_train_pca.joblib
+/
 /models/
 /audio/
 /clean/
 /pickles/
-
+/UrbanSound8K/
+UrbanSound8K.tar.gz
 
 ##
