@@ -1,7 +1,6 @@
 import os
 import pandas as pd
 import numpy as np
-from tqdm import tqdm
 
 import librosa
 from sklearn.preprocessing import LabelEncoder
@@ -44,7 +43,8 @@ def examine_audio_files(metadata, audio_path='UrbanSoundDatasetSample/audio/'):
 
     for index, row in metadata.iterrows():
         
-        file_name = os.path.join(audio_path, 'fold'+str(row["fold"]), str(row["slice_file_name"]))        
+        file_name = os.path.join(audio_path, str(row["slice_file_name"]))
+        
         data = wavfilehelper.get_file_props(file_name)
         audiodata.append(data)
 
@@ -57,13 +57,13 @@ def examine_audio_files(metadata, audio_path='UrbanSoundDatasetSample/audio/'):
 # paths should be updated for full dataset
 # file_name = os.path.join(os.path.abspath('/UrbanSound8K/audio/'),'fold'+str(row["fold"])+'/',str(row["slice_file_name"]))
 
-metadata = pd.read_csv('UrbanSound8K/metadata/UrbanSound8K.csv')
-audio_path = 'UrbanSound8K/audio/'
+metadata = pd.read_csv('UrbanSoundDatasetSample/metadata/UrbanSound8K.csv')
+audio_path = 'UrbanSoundDatasetSample/audio/'
 
 
-## if using a subsample
-# existing_files = os.listdir('UrbanSoundDatasetSample/audio')
-# metadata = metadata[metadata['slice_file_name'].isin(existing_files)].reset_index(drop=True)
+#if using a subsample
+existing_files = os.listdir('UrbanSoundDatasetSample/audio')
+metadata = metadata[metadata['slice_file_name'].isin(existing_files)].reset_index(drop=True)
 
 
 # CNN expects similar sized data
@@ -73,9 +73,9 @@ features = []
 vec_type = 'mfccs'
 
 #iterating through each row, extracting features
-for index, row in tqdm(metasub.iterrows()):
+for index, row in metasub.iterrows():
     
-    file_name = os.path.join(audio_path, 'fold'+str(row["fold"]), str(row["slice_file_name"]))
+    file_name = os.path.join(audio_path, str(row["slice_file_name"]))
     label = row['class_name']
     vector = extract_features(fname=file_name, features=vec_type, max_pad_len=max_pad_len)
     
