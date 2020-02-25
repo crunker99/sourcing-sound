@@ -7,6 +7,7 @@ plt.style.use('ggplot')
 from scipy.io import wavfile
 from python_speech_features import mfcc, logfbank
 import librosa
+import librosa.display
 import timeit
 
 def plot_signals(signals):
@@ -65,6 +66,21 @@ def plot_mfccs(mfccs):
             axs[i,j].get_yaxis().set_visible(False)
             idx += 1
 
+def plot_mels(mels):
+    fig, axs = plt.subplots(2, 2, sharex=False,
+                            sharey=True, figsize=(20,5))
+    fig.suptitle('Mel Spectrograms', size=16)
+    idx = 0
+    for i in range(2):
+        for j in range(2):
+            axs[i,j].set_title(list(mels.keys())[idx])
+            librosa.display.specshow(list(mels.values())[idx], x_axis='s',
+                             y_axis='mel', fmax=44100, ax=axs[i,j], cmap='hot')
+            axs[i,j].get_xaxis().set_visible(False)
+            axs[i,j].get_yaxis().set_visible(False)
+            axs[i,j].set_title(list(mels.keys())[idx])
+            idx += 1  
+
 def envelope(y, rate, threshold):
     y = pd.Series(y).apply(np.abs)
     y_mean = y.rolling(window=int(rate/5), min_periods=1, center=True).mean()
@@ -104,26 +120,32 @@ n_classes = len(classes)
 df.reset_index(inplace=True)
 # noisy_df.reset_index(inplace=True)
 
-signals = {}
-fft = {}
-fbank = {}
-mfccs = {}
+# signals = {}
+# fft = {}
+# fbank = {}
+# mfccs = {}
+# mels = {} 
 
-# Plotting examples of each class
-for c in tqdm(classes):
-    wav_file = df[df.labels == c].iloc[0, 0]
-    signal, rate = librosa.load('audio/train/'+wav_file, sr=22050)
-    mask = envelope(signal, rate, 0.0005)
-    signal = signal[mask]
-    signals[c] = signal
-    fft[c] = calc_fft(signal, rate)
-    fbank[c] = logfbank(signal[:rate], rate, nfilt=26, nfft=1103).T
-    mfccs[c] = mfcc(signal[:rate], rate, numcep=26, nfilt=26, nfft=1103).T
+# # Plotting examples of each class
+# for c in tqdm(classes):
+#     wav_file = df[df.labels == c].iloc[0, 0]
+#     signal, rate = librosa.load('audio/train/'+wav_file, sr=22050)
+#     mask = envelope(signal, rate, 0.0005)
+#     signal = signal[mask]
+#     signals[c] = signal
+#     fft[c] = calc_fft(signal, rate)
+#     fbank[c] = logfbank(signal[:rate], rate, nfilt=26, nfft=1103).T
+#     mfccs[c] = mfcc(signal[:rate], rate, numcep=26, nfilt=26, nfft=1103).T
+#     mel = (librosa.feature.melspectrogram(signal, rate, n_mels=26,
+#                                             n_fft=1103))
+#     mels[c] = librosa.power_to_db(mel)
 
 # plot_signals(signals)
 # plot_fft(fft)
 # plot_fbank(fbank)
-plot_mfccs(mfccs)
+# plot_mfccs(mfccs)
+# plot_mels(mels)
+# plt.tight_layout()
 # plt.show()
 
 # if len(os.listdir('clean')) == 0:
