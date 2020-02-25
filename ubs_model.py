@@ -75,7 +75,6 @@ print("Pre-training accuracy: %.4f%%" % accuracy)
 ### TRAINING
 
 num_epochs = int(input('Enter number of epohchs: '))
-num_batch_size = 128
 
 # num_epochs = 72
 num_batch_size = 256
