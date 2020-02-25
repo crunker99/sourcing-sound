@@ -73,10 +73,10 @@ features = []
 vec_type = 'mfccs'
 
 #iterating through each row, extracting features
-for index, row in tqdm(metasub.iterrows()):
+for index, row in tqdm(metadata.iterrows()):
     
     file_name = os.path.join(audio_path, 'fold'+str(row["fold"]), str(row["slice_file_name"]))
-    label = row['class_name']
+    label = row['class']
     vector = extract_features(fname=file_name, features=vec_type, max_pad_len=max_pad_len)
     
     features.append([vector, label])
@@ -92,7 +92,6 @@ le = LabelEncoder()
 y_cat = to_categorical(le.fit_transform(y)) 
 
 X_train, X_test, y_train, y_test = train_test_split(X, y_cat, test_size=0.2, random_state = 42)
-
 
 
 ### store the preprocessed data for further use
