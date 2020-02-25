@@ -74,11 +74,11 @@ print("Pre-training accuracy: %.4f%%" % accuracy)
 
 ### TRAINING
 
-num_epochs = int(input('Enter number of epohchs:    '))
+num_epochs = int(input('Enter number of epohchs: '))
 num_batch_size = 128
 
 # num_epochs = 72
-# num_batch_size = 256
+num_batch_size = 256
 
 checkpoint = ModelCheckpoint(filepath='models/weights.best.basic_cnn.hdf5', 
                                verbose=1, save_best_only=True)
