@@ -100,17 +100,25 @@ It is still necessary to handle these differing clip lengths in the data as we f
 
 Some samples have remarkable similarity. See 'Bus', for example. It was necessary to manually listen to these files to ensure they were not actually duplicates. They are not duplicates, rather the samples were recorded on the same bus or bus system, and an announcement chime is present at similar points in the audio files, resulting in the characteristic smears. In the similarly appearing bicycle bell spectrograms, upon listening, it sounds like the same bell was recorded multiple times, resulting in near identical features, however there are clear, audible differences. 
 
-The obvious danger created by these similar examples is that some of their signatures may not be considered actual signatures of the class, rather the sonic signature of the environment where they were recorded. At this point, bringing in another dataset with cleaner audio for the model to train on seemed to be an inevitable direction, but first, trying to . 
+The obvious danger created by these similar examples is that some of their signatures may not be considered actual signatures of the class, rather the sonic signature of the environment where they were recorded. At this point, bringing in another dataset with cleaner audio for the model to train on seemed to be an inevitable direction, but a first attempt was made on existing data. 
 
 
 ## Initial Model
 
 A relatively simply CNN model was compiled in Python using Tensorflow with Keras. Each clip was downsampled to a sample rate of 16,000 samples per second, with a bit depth of 16 (2 to the 16 possible values per sample). The audio was converted to mel spectrograms with 60 filters. To increase examples of each class,  these spectrograms were repeatedly randomly sliced which created a uniform shape of inputs for the model.
 
-After training for 100 epochs, the model's validation accuracy was not increasing anymore. On a validation set, the best model recorded about 53% accuracy.
+After training for 100 epochs, the model's validation accuracy was not increasing anymore. On a hold-out set, the best model recorded about 53% accuracy.
+
+
+### New data, different approach
 
 
 
+Training for 72 epochs, with batch size 256:
+
+    Training completed in time:  0:07:46.033253
+    Training Accuracy:  0.9099499
+    Testing Accuracy:  0.8666285
 
 
 
