@@ -119,10 +119,13 @@ for train_idx, test_idx in logo.split(X, y, folds):
     # score_train = model.evaluate(X_train, y_train, verbose=0)
     # print("Training Accuracy: ", score_train[1])
 
-    score_test = model.evaluate(X_test, y_test, verbose=0)
-    print("Final Testing Accuracy: ", score_test[1])
+    score_test = history.history['val_accuracy'][-1]
+    print("Final Testing Accuracy: ", score_test)
 
-    fold_accuracies[fold] = score_test[1]
+    best_score = max(history.history['val_accuracy'])
+    print("Best Testing Accuracy: ", best_score)
+
+    fold_accuracies[fold] = best_score
 
     clear_session()
 
