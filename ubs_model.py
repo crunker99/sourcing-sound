@@ -15,9 +15,10 @@ from sklearn import metrics
 
 def get_conv_model():
     model = Sequential()
+
     model.add(Conv2D(filters=16, kernel_size=3, input_shape=(num_rows, num_columns, num_channels), activation='relu'))
     # model.add(MaxPooling2D(pool_size=2))
-    model.add(Dropout(0.2))
+    # model.add(Dropout(0.2))
 
     model.add(Conv2D(filters=32, kernel_size=3, activation='relu'))
     # model.add(MaxPooling2D(pool_size=2))
@@ -28,13 +29,17 @@ def get_conv_model():
     model.add(Dropout(0.2))
 
     model.add(Conv2D(filters=128, kernel_size=3, activation='relu'))
-
     model.add(MaxPooling2D(pool_size=2))
 
-    model.add(Conv2D(filters=128, kernel_size=3, activation='relu'))
-
+    model.add(Flatten())
+    model.add(Dense(128, activation='relu'))
     model.add(Dropout(0.2))
-    model.add(GlobalAveragePooling2D())
+
+    model.add(Dense(64, activation='relu'))
+    model.add(Dropout(0.2))
+
+    model.add(Dense(32, activation='relu'))
+    model.add(Dropout(0.2))
 
     model.add(Dense(num_labels, activation='softmax'))
 
@@ -84,7 +89,7 @@ filter_size = 2
 # user specified number of epochs
 num_epochs = int(input('Enter number of epochs: '))
 # num_epochs = 72
-num_batch_size = 32
+num_batch_size = 256
 
 # start the timer before training. This will include all the fold durations
 start = datetime.now()
