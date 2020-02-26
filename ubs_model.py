@@ -117,7 +117,7 @@ for train_idx, test_idx in logo.split(X, y, folds):
                             save_weights_only=False)
 
     #add early stopping checkpoint
-    earlystop = EarlyStopping(monitor='val_acc')
+    earlystop = EarlyStopping(monitor='val_acc', min_delta=0.1, patience=5, mode='auto')
 
     # put the different runs into a tensorboard log directory
     log_dir = f"logs/fit/fold{fold}_" + datetime.now().strftime("%Y%m%d-%H%M%S")
