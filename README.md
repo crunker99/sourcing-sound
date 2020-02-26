@@ -121,6 +121,12 @@ Training for 72 epochs, with batch size 256:
     Testing Accuracy:  0.8666285
 
 
+Training for 500 epochs, batch size 256:
+
+    Training completed in time:  0:53:06.691380
+    Training Accuracy:  0.9975662
+    Testing Accuracy:  0.9364625
+
 
 
 <!-- ## RNN Model -->

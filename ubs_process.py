@@ -73,31 +73,33 @@ features = []
 vec_type = 'mfccs'
 
 #iterating through each row, extracting features
-for index, row in tqdm(metadata.iterrows()):
+for index, row in tqdm(metadata.iterrows(), total=metadata.shape[0]):
     
     file_name = os.path.join(audio_path, 'fold'+str(row["fold"]), str(row["slice_file_name"]))
     label = row['class']
+    fold = row["fold"]
     vector = extract_features(fname=file_name, features=vec_type, max_pad_len=max_pad_len)
     
-    features.append([vector, label])
+    features.append([vector, label, fold])
 
-featuresdf = pd.DataFrame(features, columns=['feature', 'class_label'])
+featuresdf = pd.DataFrame(features, columns=['feature', 'class_label', 'fold'])
 
 # Convert features and corresponding classification labels into numpy arrays
 X = np.array(featuresdf.feature.tolist())
 y = np.array(featuresdf.class_label.tolist())
+folds = np.array(featuresdf.fold.tolist())
 
 # Encode the classification labels
 le = LabelEncoder()
-y_cat = to_categorical(le.fit_transform(y)) 
+y = to_categorical(le.fit_transform(y)) 
 
-X_train, X_test, y_train, y_test = train_test_split(X, y_cat, test_size=0.2, random_state = 42)
+# X_train, X_test, y_train, y_test = train_test_split(X, y_cat, test_size=0.2, random_state = 42)
 
 
 ### store the preprocessed data for further use
-processed_data_split = (X_train, X_test, y_train, y_test)
+processed_data = (X, y, folds)
 data_path = os.path.join('pickles', 'urbansound_'+ vec_type + '.p')
 
 with open(data_path, 'wb') as handle:
-    pickle.dump(processed_data_split, handle, protocol=2)
+    pickle.dump(processed_data, handle, protocol=2)
 
