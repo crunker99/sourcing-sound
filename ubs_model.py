@@ -129,7 +129,7 @@ for train_idx, test_idx in logo.split(X, y, folds):
 
     history = model.fit(X_train, y_train, batch_size=num_batch_size,
             epochs=num_epochs, validation_data=(X_test, y_test), 
-            callbacks=[checkpoint, tensorboard], verbose=1)
+            callbacks=[checkpoint, earlystop, tensorboard], verbose=1)
     
     duration_fold = datetime.now() - start_fold
     print("Fold training completed in time: ", duration_fold)
