@@ -112,6 +112,23 @@ After training for 100 epochs, the model's validation accuracy was not increasin
 
 ### New data, different approach
 
+Gathered new data: [UrbanSound8K Dataset](https://urbansounddataset.weebly.com/urbansound8k.html)
+- 8732 labeled sound excerpts(<=4s>)
+- 10 classes of urban sounds:
+    - Air conditioner
+    - Car horn
+    - Children playing
+    - Dog bark
+    - Drilling
+    - Engine idling
+    - Gun shot
+    - Jackhammer
+    - Siren
+    - Stree music
+
+Other projects <link> have used MFCCs to train models, and that was explored initially on this dataset. Mel spectrograms will be explored as well with a similar CNN framework. 
+
+
 #### MFCCS:
 
 Training for 72 epochs, with batch size 256:
