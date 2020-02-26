@@ -8,6 +8,7 @@ from tensorflow.keras.layers import Dense, Dropout, Activation, Flatten
 from tensorflow.keras.layers import Convolution2D, Conv2D, MaxPooling2D, GlobalAveragePooling2D
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras import utils
+from tensorflow.keras.backend import clear_session
 from sklearn.model_selection import LeaveOneGroupOut
 from sklearn import metrics 
 
@@ -119,9 +120,12 @@ for train_idx, test_idx in logo.split(X, y, folds):
     # print("Training Accuracy: ", score_train[1])
 
     score_test = model.evaluate(X_test, y_test, verbose=0)
-    print("Testing Accuracy: ", score_test[1])
+    print("Final Testing Accuracy: ", score_test[1])
 
     fold_accuracies[fold] = score_test[1]
+
+    clear_session()
+
 
 
 ### Review results of total training
