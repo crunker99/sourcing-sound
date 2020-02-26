@@ -3,9 +3,10 @@ import numpy as np
 from datetime import datetime 
 import pickle
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.callbacks import ModelCheckpoint, TensorBoard
+from tensorflow.keras.callbacks import ModelCheckpoint, TensorBoard, EarlyStopping
 from tensorflow.keras.layers import Dense, Dropout, Activation, Flatten
 from tensorflow.keras.layers import Convolution2D, Conv2D, MaxPooling2D, GlobalAveragePooling2D
+from tensorflow.keras.regularizers import l2
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras import utils
 from tensorflow.keras.backend import clear_session
@@ -16,24 +17,26 @@ from sklearn import metrics
 def get_conv_model():
     model = Sequential()
 
-    model.add(Conv2D(filters=16, kernel_size=3, input_shape=(num_rows, num_columns, num_channels), activation='relu'))
+    model.add(Conv2D(filters=16, kernel_size=3, kernel_regularizer=l2(0.0001),
+                    input_shape=(num_rows, num_columns, num_channels), activation='relu'))
     # model.add(MaxPooling2D(pool_size=2))
     # model.add(Dropout(0.2))
 
-    model.add(Conv2D(filters=32, kernel_size=3, activation='relu'))
+    model.add(Conv2D(filters=32, kernel_size=3, kernel_regularizer=l2(0.0001), activation='relu'))
     # model.add(MaxPooling2D(pool_size=2))
     model.add(Dropout(0.2))
 
-    model.add(Conv2D(filters=64, kernel_size=3, activation='relu'))
+    model.add(Conv2D(filters=64, kernel_size=3, kernel_regularizer=l2(0.0001), activation='relu'))
     # model.add(MaxPooling2D(pool_size=2))
     model.add(Dropout(0.2))
 
-    model.add(Conv2D(filters=128, kernel_size=3, activation='relu'))
-    model.add(MaxPooling2D(pool_size=2))
+    # model.add(Conv2D(filters=128, kernel_size=3, kernel_regularizer=l2(0.0001), activation='relu'))
+    # model.add(MaxPooling2D(pool_size=2))
 
     model.add(Flatten())
-    model.add(Dense(128, activation='relu'))
-    model.add(Dropout(0.2))
+
+    # model.add(Dense(128, activation='relu'))
+    # model.add(Dropout(0.2))
 
     model.add(Dense(64, activation='relu'))
     model.add(Dropout(0.2))
@@ -112,6 +115,9 @@ for train_idx, test_idx in logo.split(X, y, folds):
     checkpoint = ModelCheckpoint(filepath=f'models/{vec_type}_basic_cnn_fold{fold}.hdf5', 
                             monitor='val_acc', verbose=1, save_best_only=True,
                             save_weights_only=False)
+
+    #add early stopping checkpoint
+    earlystop = EarlyStopping(monitor='val_acc')
 
     # put the different runs into a tensorboard log directory
     log_dir = f"logs/fit/fold{fold}_" + datetime.now().strftime("%Y%m%d-%H%M%S")
