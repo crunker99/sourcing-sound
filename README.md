@@ -112,7 +112,7 @@ After training for 100 epochs, the model's validation accuracy was not increasin
 
 ### New data, different approach
 
-
+#### MFCCS:
 
 Training for 72 epochs, with batch size 256:
 
@@ -126,6 +126,23 @@ Training for 500 epochs, batch size 256:
     Training completed in time:  0:53:06.691380
     Training Accuracy:  0.9975662
     Testing Accuracy:  0.9364625
+
+
+10 fold cross validation. 100 training epochs. 256 Batch Size
+
+    Training completed in time:  1:17:56.257562
+    Fold 1:    accuracy = 0.5899198055267334
+    Fold 2:    accuracy = 0.5777027010917664
+    Fold 3:    accuracy = 0.5502702593803406
+    Fold 4:    accuracy = 0.6030303239822388
+    Fold 5:    accuracy = 0.6559829115867615
+    Fold 6:    accuracy = 0.6184689998626709
+    Fold 7:    accuracy = 0.6288782954216003
+    Fold 8:    accuracy = 0.6240694522857666
+    Fold 9:    accuracy = 0.6678921580314636
+    Fold 10:    accuracy = 0.6702508926391602
+    Average Accuracy:  0.61864656
+
 
 
 

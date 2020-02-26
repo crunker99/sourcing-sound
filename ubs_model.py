@@ -15,19 +15,19 @@ from sklearn import metrics
 
 def get_conv_model():
     model = Sequential()
-    model.add(Conv2D(filters=16, kernel_size=2, input_shape=(num_rows, num_columns, num_channels), activation='relu'))
+    model.add(Conv2D(filters=16, kernel_size=3, input_shape=(num_rows, num_columns, num_channels), activation='relu'))
+    # model.add(MaxPooling2D(pool_size=2))
+    model.add(Dropout(0.2))
+
+    model.add(Conv2D(filters=32, kernel_size=3, activation='relu'))
     model.add(MaxPooling2D(pool_size=2))
     model.add(Dropout(0.2))
 
-    model.add(Conv2D(filters=32, kernel_size=2, activation='relu'))
+    model.add(Conv2D(filters=64, kernel_size=3, activation='relu'))
     model.add(MaxPooling2D(pool_size=2))
     model.add(Dropout(0.2))
 
-    model.add(Conv2D(filters=64, kernel_size=2, activation='relu'))
-    model.add(MaxPooling2D(pool_size=2))
-    model.add(Dropout(0.2))
-
-    model.add(Conv2D(filters=128, kernel_size=2, activation='relu'))
+    model.add(Conv2D(filters=128, kernel_size=3, activation='relu'))
     model.add(MaxPooling2D(pool_size=2))
     model.add(Dropout(0.2))
     model.add(GlobalAveragePooling2D())
@@ -43,7 +43,7 @@ def get_conv_model():
 # Retrieve data from pickle file. 
 # From ubs_process.py, will be a 3-item tuple(X, y(categorical matrix), folds)
 
-vec_type = 'mfccs'
+vec_type = 'mels'
 data_path = os.path.join('pickles', 'urbansound_'+ vec_type + '.p')
 
 with open(data_path, 'rb') as handle:
@@ -55,8 +55,11 @@ X, y, folds = data[0], data[1], data[2]
 # Pre-specify global variables for model
 # num_rows as specified by number of mfccs or mels. 
 # Columns expected to be same as <max_pad_len> in ubs_process
+if vec_type == 'mfccs':
+    num_rows = 40
+elif vec_type == 'mels':
+    num_rows = 60 
 
-num_rows = 40
 num_columns = 174
 num_channels = 1
 
@@ -77,7 +80,7 @@ filter_size = 2
 # user specified number of epochs
 num_epochs = int(input('Enter number of epochs: '))
 # num_epochs = 72
-num_batch_size = 256
+num_batch_size = 32
 
 # start the timer before training. This will include all the fold durations
 start = datetime.now()
@@ -89,14 +92,15 @@ fold_accuracies = {}
 logo = LeaveOneGroupOut()
 
 for train_idx, test_idx in logo.split(X, y, folds):
-
+    ## test_idx groups samples with the same fold, train_idx is all NOT in the test fold
     X_train, X_test, y_train, y_test = X[train_idx], X[test_idx], y[train_idx], y[test_idx]
-    fold = folds[test_idx][0]
+    
+    fold = folds[test_idx][0] 
 
     model = get_conv_model()
 
     #create checkpoint to save best model 
-    checkpoint = ModelCheckpoint(filepath=f'models/basic_cnn_fold{fold}.hdf5', 
+    checkpoint = ModelCheckpoint(filepath=f'models/{vec_type}_basic_cnn_fold{fold}.hdf5', 
                             monitor='val_acc', verbose=1, save_best_only=True,
                             save_weights_only=False)
 
@@ -119,10 +123,10 @@ for train_idx, test_idx in logo.split(X, y, folds):
     # score_train = model.evaluate(X_train, y_train, verbose=0)
     # print("Training Accuracy: ", score_train[1])
 
-    score_test = history.history['val_acc'][-1]
+    score_test = history.history['val_accuracy'][-1]
     print("Final Testing Accuracy: ", score_test)
 
-    best_score = max(history.history['val_acc'])
+    best_score = max(history.history['val_accuracy'])
     print("Best Testing Accuracy: ", best_score)
 
     fold_accuracies[fold] = best_score

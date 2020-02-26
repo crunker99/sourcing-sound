@@ -69,8 +69,9 @@ audio_path = 'UrbanSound8K/audio/'
 # CNN expects similar sized data
 max_pad_len = 174
 
+### DEFINE FEATURE TYPE --- 'mels' or 'mfccs'
 features = []
-vec_type = 'mfccs'
+vec_type = 'mels'
 
 #iterating through each row, extracting features
 for index, row in tqdm(metadata.iterrows(), total=metadata.shape[0]):
