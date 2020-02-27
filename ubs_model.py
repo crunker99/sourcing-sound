@@ -12,6 +12,7 @@ from tensorflow.keras import utils
 from tensorflow.keras.metrics import AUC
 from tensorflow.keras.backend import clear_session
 from sklearn.model_selection import LeaveOneGroupOut
+from sklearn.utils.class_weight import compute_class_weight
 from sklearn import metrics 
 
 
@@ -65,7 +66,6 @@ def get_conv_model():
 
 # Retrieve data from pickle file. 
 # From ubs_process.py, will be a 3-item tuple(X, y(categorical matrix), folds)
-
 vec_type = 'mels'
 data_path = os.path.join('pickles', 'urbansound_'+ vec_type + '.p')
 
@@ -73,6 +73,7 @@ with open(data_path, 'rb') as handle:
     data = pickle.load(handle)
 
 X, y, folds = data[0], data[1], data[2]
+
 
 
 # Pre-specify global variables for model
@@ -120,6 +121,10 @@ for train_idx, test_idx in logo.split(X, y, folds):
     ## test_idx groups samples with the same fold, train_idx is all NOT in the test fold
     X_train, X_test, y_train, y_test = X[train_idx], X[test_idx], y[train_idx], y[test_idx]
     
+    ### compute class weights
+    y_flat = np.argmax(y_train, axis=1)
+    class_weights = compute_class_weight(class_weight='balanced' , classes=np.unique(y_flat), y=y_flat )
+
     fold = folds[test_idx][0] 
 
     model = get_conv_model()
@@ -141,7 +146,7 @@ for train_idx, test_idx in logo.split(X, y, folds):
     start_fold = datetime.now()
 
     history = model.fit(X_train, y_train, batch_size=num_batch_size,
-            epochs=num_epochs, validation_data=(X_test, y_test), 
+            epochs=num_epochs, class_weight=class_weights, validation_data=(X_test, y_test), 
             callbacks=[checkpoint, earlystop, tensorboard], verbose=1)
     
     duration_fold = datetime.now() - start_fold
