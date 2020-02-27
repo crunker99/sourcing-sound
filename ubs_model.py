@@ -9,6 +9,7 @@ from tensorflow.keras.layers import Convolution2D, Conv2D, MaxPooling2D, GlobalA
 from tensorflow.keras.regularizers import l2
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras import utils
+from tensorflow.keras.metrics import AUC
 from tensorflow.keras.backend import clear_session
 from sklearn.model_selection import LeaveOneGroupOut
 from sklearn import metrics 
@@ -46,7 +47,7 @@ def get_conv_model():
 
     model.add(Dense(num_labels, activation='softmax'))
 
-    model.compile(loss='categorical_crossentropy', metrics=['accuracy', 'auc'], optimizer='adam')
+    model.compile(loss='categorical_crossentropy', metrics=['accuracy', AUC()], optimizer='adam')
     # model.summary()
     return model
 
