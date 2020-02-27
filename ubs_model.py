@@ -17,7 +17,6 @@ from sklearn import metrics
 
 
 def get_conv_model():
-def get_conv_model():
     
     model = Sequential()
 
