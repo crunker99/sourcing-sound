@@ -37,14 +37,14 @@ def get_conv_model():
 
     model.add(Flatten())
 
-    model.add(Dense(1024, activation='relu'))
-    model.add(Dropout(0.5))
+    # model.add(Dense(1024, activation='relu'))
+    model.add(Dropout(0.8))
 
     model.add(Dense(64, activation='relu')) 
     model.add(Dropout(0.5))
-
-    # model.add(Dense(32, activation='relu'))
-    # model.add(Dropout(0.2))
+    
+    model.add(Dense(32, activation='relu'))
+    model.add(Dropout(0.5))
 
     model.add(Dense(num_labels, activation='softmax'))
 
