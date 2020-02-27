@@ -17,9 +17,9 @@ from sklearn import metrics
 def get_conv_model():
     model = Sequential()
 
-    model.add(Conv2D(filters=16, kernel_size=3, kernel_regularizer=l2(0.0001),
+    model.add(Conv2D(filters=16, kernel_size=5, kernel_regularizer=l2(0.0001),
                     input_shape=(num_rows, num_columns, num_channels), activation='relu'))
-    # model.add(MaxPooling2D(pool_size=2))
+    model.add(MaxPooling2D(pool_size=2))
     # model.add(Dropout(0.2))
 
     model.add(Conv2D(filters=32, kernel_size=3, kernel_regularizer=l2(0.0001), activation='relu'))
@@ -27,7 +27,7 @@ def get_conv_model():
     model.add(Dropout(0.2))
 
     model.add(Conv2D(filters=64, kernel_size=3, kernel_regularizer=l2(0.0001), activation='relu'))
-    # model.add(MaxPooling2D(pool_size=2))
+    model.add(MaxPooling2D(pool_size=2))
     model.add(Dropout(0.2))
 
     # model.add(Conv2D(filters=128, kernel_size=3, kernel_regularizer=l2(0.0001), activation='relu'))
@@ -39,10 +39,10 @@ def get_conv_model():
     # model.add(Dropout(0.2))
 
     model.add(Dense(64, activation='relu'))
-    model.add(Dropout(0.2))
+    model.add(Dropout(0.5))
 
-    model.add(Dense(32, activation='relu'))
-    model.add(Dropout(0.2))
+    # model.add(Dense(32, activation='relu'))
+    # model.add(Dropout(0.2))
 
     model.add(Dense(num_labels, activation='softmax'))
 
