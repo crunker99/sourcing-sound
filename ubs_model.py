@@ -96,9 +96,11 @@ num_batch_size = 256
 
 # start the timer before training. This will include all the fold durations
 start = datetime.now()
+# print a model summary
+tmp = get_conv_model()
+tmp.summary()
 
-### Cross validation. Fold indices pre-specified
-
+### Cross validation. Fold indices pre-specified for UrbanSound8k dataset
 fold_accuracies = {}
 
 logo = LeaveOneGroupOut()
@@ -116,8 +118,8 @@ for train_idx, test_idx in logo.split(X, y, folds):
                             monitor='val_acc', verbose=1, save_best_only=True,
                             save_weights_only=False)
 
-    #add early stopping checkpoint
-    earlystop = EarlyStopping(monitor='val_acc', min_delta=0.1, patience=5, mode='auto')
+    # add early stopping checkpoint
+    # earlystop = EarlyStopping(monitor='val_acc', min_delta=0.1, patience=5, mode='auto')
 
     # put the different runs into a tensorboard log directory
     log_dir = f"logs/fit/fold{fold}_" + datetime.now().strftime("%Y%m%d-%H%M%S")
@@ -129,7 +131,7 @@ for train_idx, test_idx in logo.split(X, y, folds):
 
     history = model.fit(X_train, y_train, batch_size=num_batch_size,
             epochs=num_epochs, validation_data=(X_test, y_test), 
-            callbacks=[checkpoint, earlystop, tensorboard], verbose=1)
+            callbacks=[checkpoint, tensorboard], verbose=1)
     
     duration_fold = datetime.now() - start_fold
     print("Fold training completed in time: ", duration_fold)
