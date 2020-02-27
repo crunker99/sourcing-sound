@@ -223,4 +223,5 @@ Training for 500 epochs, batch size 256:
     Fold 10:    accuracy = 0.7096773982048035
     Average Accuracy:  0.6613201
 
+
 <!-- ## RNN Model -->

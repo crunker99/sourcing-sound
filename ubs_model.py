@@ -17,40 +17,30 @@ from sklearn import metrics
 
 
 def get_conv_model():
+def get_conv_model():
+    
     model = Sequential()
 
-    model.add(Conv2D(filters=16, kernel_size=(3,3), kernel_regularizer=l2(0.0001),
-                    input_shape=(num_rows, num_columns, num_channels), padding='same', activation='relu'))
+    model.add(Conv2D(filters=16, kernel_size=(2,2), kernel_regularizer=l2(0.0001),
+                    input_shape=(num_rows, num_columns, num_channels), activation='relu'))
+    model.add(MaxPooling2D(pool_size=2))
+
+    model.add(Conv2D(filters=32, kernel_size=(2,2), kernel_regularizer=l2(0.0001), activation='relu'))
+    model.add(Dropout(0.2))
+
+    model.add(Conv2D(filters=64, kernel_size=(3,3), kernel_regularizer=l2(0.0001), activation='relu'))
     model.add(MaxPooling2D(pool_size=2))
     model.add(Dropout(0.2))
-
-    model.add(Conv2D(filters=32, kernel_size=(2,2), kernel_regularizer=l2(0.0001), padding='same', activation='relu'))
-    # model.add(MaxPooling2D(pool_size=2))
-    model.add(Dropout(0.2))
-
-    model.add(Conv2D(filters=64, kernel_size=(3,3), kernel_regularizer=l2(0.0001), padding='same', activation='relu'))
-    model.add(MaxPooling2D(pool_size=2))
-    model.add(Dropout(0.2))
-
-    # model.add(Conv2D(filters=128, kernel_size=3, kernel_regularizer=l2(0.0001), activation='relu'))
-    # model.add(MaxPooling2D(pool_size=2))
 
     model.add(Flatten())
 
-    # model.add(Dense(1024, activation='relu'))
-    model.add(Dropout(0.8))
-
     model.add(Dense(64, activation='relu')) 
-    model.add(Dropout(0.5))
-    
-    model.add(Dense(32, activation='relu'))
     model.add(Dropout(0.5))
 
     model.add(Dense(num_labels, activation='softmax'))
 
+    model.compile(loss='categorical_crossentropy', metrics=['accuracy', AUC()], optimizer='adam')
     
-    model.compile(loss='categorical_crossentropy', metrics=['accuracy', AUC()], optimizer=Adam(lr=0.0005))
-    # model.summary()
     return model
 
 
@@ -126,7 +116,7 @@ for train_idx, test_idx in logo.split(X, y, folds):
                             save_weights_only=False)
 
     # add early stopping checkpoint
-    earlystop = EarlyStopping(monitor='val_acc', min_delta=0.001, patience=5, mode='auto')
+    earlystop = EarlyStopping(monitor='val_acc', min_delta=0.001, patience=10, mode='auto')
 
     # put the different runs into a tensorboard log directory
     log_dir = f"logs/fit/fold{fold}_" + datetime.now().strftime("%Y%m%d-%H%M%S")
