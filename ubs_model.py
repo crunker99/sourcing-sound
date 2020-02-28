@@ -33,7 +33,7 @@ def get_conv_model():
 
     model.add(Flatten())
 
-    model.add(Dense(64, activation='relu')) 
+    model.add(Dense(16, activation='relu')) 
     model.add(Dropout(0.5))
 
     model.add(Dense(num_labels, activation='softmax'))
@@ -115,7 +115,7 @@ for train_idx, test_idx in logo.split(X, y, folds):
                             save_weights_only=False)
 
     # add early stopping checkpoint
-    earlystop = EarlyStopping(monitor='val_acc', patience=10, mode='auto')
+    earlystop = EarlyStopping(monitor='val_acc', patience=50, mode='auto')
 
     # put the different runs into a tensorboard log directory
     log_dir = f"logs/fit/fold{fold}_" + datetime.now().strftime("%Y%m%d-%H%M%S")
