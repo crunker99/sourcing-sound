@@ -20,12 +20,13 @@ def get_conv_model():
     
     model = Sequential()
 
-    model.add(Conv2D(filters=16, kernel_size=(2,2), kernel_regularizer=l2(0.001),
+    model.add(Conv2D(filters=16, kernel_size=(3,3), kernel_regularizer=l2(0.001),
                     input_shape=(num_rows, num_columns, num_channels), activation='relu'))
     model.add(MaxPooling2D(pool_size=2))
+    model.add(Dropout(0.5))
 
-    # model.add(Conv2D(filters=32, kernel_size=(2,2), kernel_regularizer=l1(0.001), activation='relu'))
-    # model.add(Dropout(0.5))
+    model.add(Conv2D(filters=32, kernel_size=(2,2), kernel_regularizer=l1(0.001), activation='relu'))
+    model.add(Dropout(0.5))
 
     # model.add(Conv2D(filters=64, kernel_size=(3,3), kernel_regularizer=l1(0.001), activation='relu'))
     # model.add(MaxPooling2D(pool_size=2))
@@ -33,7 +34,7 @@ def get_conv_model():
 
     model.add(Flatten())
 
-    model.add(Dense(16, activation='relu')) 
+    model.add(Dense(32, activation='relu')) 
     model.add(Dropout(0.5))
 
     model.add(Dense(num_labels, activation='softmax'))
@@ -81,8 +82,7 @@ filter_size = 2
 
 ### TRAINING
 
-# user specified number of epochs
-num_epochs = int(input('Enter number of epochs: '))
+
 # num_epochs = 72
 num_batch_size = 64
 
@@ -167,3 +167,6 @@ print('Average Accuracy: ', avg_score)
 # score = model.evaluate(X_test, y_test, verbose=0)
 # print("Testing Accuracy: ", score[1])
 
+if __name__ == '__main__':
+    # user specified number of epochs
+    num_epochs = int(input('Enter number of epochs: '))
