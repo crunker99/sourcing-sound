@@ -82,9 +82,10 @@ filter_size = 2
 
 ### TRAINING
 
-
+# user specified number of epochs
+num_epochs = int(input('Enter number of epochs: '))
 # num_epochs = 72
-num_batch_size = 64
+num_batch_size = 16
 
 # start the timer before training. This will include all the fold durations
 start = datetime.now()
@@ -167,6 +168,3 @@ print('Average Accuracy: ', avg_score)
 # score = model.evaluate(X_test, y_test, verbose=0)
 # print("Testing Accuracy: ", score[1])
 
-if __name__ == '__main__':
-    # user specified number of epochs
-    num_epochs = int(input('Enter number of epochs: '))
