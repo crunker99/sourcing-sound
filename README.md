@@ -161,6 +161,8 @@ Training for 500 epochs, batch size 256:
     Average Accuracy:  0.61864656
 
 
+Decreasing batch size
+
     Training completed in time:  0:45:38.505004
     Fold 1:    accuracy = 0.5841924548149109
     Fold 2:    accuracy = 0.5945945978164673
@@ -223,6 +225,36 @@ Batch size = 16
     Fold 9:    accuracy = 0.7120097875595093
     Fold 10:    accuracy = 0.7096773982048035
     Average Accuracy:  0.6613201
+
+
+![Confusion_matrix](img/confmat_1.png)
+
+Other metrics:
+
+                    precision    recall  f1-score   support
+
+    air_conditioner     0.49      0.38      0.43      1000
+    car_horn            0.82      0.73      0.78       429
+    children_playing    0.58      0.63      0.61      1000
+    dog_bark            0.78      0.73      0.76      1000
+    drilling            0.59      0.67      0.63      1000
+    engine_idling       0.51      0.57      0.54      1000
+    gun_shot            0.89      0.92      0.91       374
+    jackhammer          0.62      0.57      0.59      1000
+    siren               0.70      0.71      0.71       929
+    street_music        0.64      0.67      0.66      1000
+
+        accuracy                           0.64      8732
+       macro avg       0.66      0.66      0.66      8732
+    weighted avg       0.64      0.64      0.63      8732
+
+
+
+
+
+
+
+Trying to resimplify the model. Changing some L2 regularizers to L1 to hopefully create some model sparsity. Increasning penalties across the board from 1e-4 to 1e-3.
 
 
 <!-- ## RNN Model -->

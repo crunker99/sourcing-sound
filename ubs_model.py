@@ -6,7 +6,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.callbacks import ModelCheckpoint, TensorBoard, EarlyStopping
 from tensorflow.keras.layers import Dense, Dropout, Activation, Flatten
 from tensorflow.keras.layers import Convolution2D, Conv2D, MaxPooling2D, GlobalAveragePooling2D
-from tensorflow.keras.regularizers import l2
+from tensorflow.keras.regularizers import l1, l2
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras import utils
 from tensorflow.keras.metrics import AUC
@@ -20,16 +20,16 @@ def get_conv_model():
     
     model = Sequential()
 
-    model.add(Conv2D(filters=16, kernel_size=(2,2), kernel_regularizer=l2(0.0001),
+    model.add(Conv2D(filters=16, kernel_size=(2,2), kernel_regularizer=l2(0.001),
                     input_shape=(num_rows, num_columns, num_channels), activation='relu'))
     model.add(MaxPooling2D(pool_size=2))
 
-    model.add(Conv2D(filters=32, kernel_size=(2,2), kernel_regularizer=l2(0.0001), activation='relu'))
-    model.add(Dropout(0.5))
+    # model.add(Conv2D(filters=32, kernel_size=(2,2), kernel_regularizer=l1(0.001), activation='relu'))
+    # model.add(Dropout(0.5))
 
-    model.add(Conv2D(filters=64, kernel_size=(3,3), kernel_regularizer=l2(0.0001), activation='relu'))
-    model.add(MaxPooling2D(pool_size=2))
-    model.add(Dropout(0.5))
+    # model.add(Conv2D(filters=64, kernel_size=(3,3), kernel_regularizer=l1(0.001), activation='relu'))
+    # model.add(MaxPooling2D(pool_size=2))
+    # model.add(Dropout(0.5))
 
     model.add(Flatten())
 
@@ -84,7 +84,7 @@ filter_size = 2
 # user specified number of epochs
 num_epochs = int(input('Enter number of epochs: '))
 # num_epochs = 72
-num_batch_size = 8
+num_batch_size = 64
 
 # start the timer before training. This will include all the fold durations
 start = datetime.now()
