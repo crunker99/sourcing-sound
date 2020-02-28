@@ -177,6 +177,7 @@ Training for 500 epochs, batch size 256:
 
 ### Best model so far:
 72 epochs
+Batch size = 16
 
     Model: "sequential"
     _________________________________________________________________

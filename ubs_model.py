@@ -25,11 +25,11 @@ def get_conv_model():
     model.add(MaxPooling2D(pool_size=2))
 
     model.add(Conv2D(filters=32, kernel_size=(2,2), kernel_regularizer=l2(0.0001), activation='relu'))
-    model.add(Dropout(0.2))
+    model.add(Dropout(0.5))
 
     model.add(Conv2D(filters=64, kernel_size=(3,3), kernel_regularizer=l2(0.0001), activation='relu'))
     model.add(MaxPooling2D(pool_size=2))
-    model.add(Dropout(0.2))
+    model.add(Dropout(0.5))
 
     model.add(Flatten())
 
@@ -84,7 +84,7 @@ filter_size = 2
 # user specified number of epochs
 num_epochs = int(input('Enter number of epochs: '))
 # num_epochs = 72
-num_batch_size = 16
+num_batch_size = 8
 
 # start the timer before training. This will include all the fold durations
 start = datetime.now()
@@ -110,12 +110,12 @@ for train_idx, test_idx in logo.split(X, y, folds):
     model = get_conv_model()
 
     #create checkpoint to save best model 
-    checkpoint = ModelCheckpoint(filepath=f'models/{vec_type}_basic_cnn_fold{fold}.hdf5', 
+    checkpoint = ModelCheckpoint(filepath=f'models/{vec_type}/cnn_fold{fold}.hdf5', 
                             monitor='val_acc', verbose=1, save_best_only=True,
                             save_weights_only=False)
 
     # add early stopping checkpoint
-    earlystop = EarlyStopping(monitor='val_acc', min_delta=0.001, patience=10, mode='auto')
+    earlystop = EarlyStopping(monitor='val_acc', patience=10, mode='auto')
 
     # put the different runs into a tensorboard log directory
     log_dir = f"logs/fit/fold{fold}_" + datetime.now().strftime("%Y%m%d-%H%M%S")
