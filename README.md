@@ -128,25 +128,29 @@ Gathered new data: [UrbanSound8K Dataset](https://urbansounddataset.weebly.com/u
 
 Other projects <link> have used MFCCs to train models, and that was explored initially on this dataset. Mel spectrograms will be explored as well with a similar CNN framework. 
 
+#### \*\*\*A note on cross-validation***
+Due to the way the UrbanSound8K dataset was created, model results will be invalid if you reshuffle the data and create your own train-test split. Some sounds come from very similar acoustic environments or even the same wav file, and a model will easily recognize this in testing if you shuffle the data, because it will easily see the same noise signature, but not necessarily the true class/signal signature.
+Use the 10 predefined folds for testing a model to validate its ability to make classifications in unseen environments
 
-#### MFCCS:
 
-Training for 72 epochs, with batch size 256:
+<!-- Training for 72 epochs, with batch size 256:
 
     Training completed in time:  0:07:46.033253
     Training Accuracy:  0.9099499
-    Testing Accuracy:  0.8666285
+    Testing Accuracy:  0.8666285 -->
+For example, by shuffling the data (commonly seen online) these results were obtained:
 
-
-Training for 500 epochs, batch size 256:
-
+    500 training epochs, batch size=256:
+    Feature type: 'mfccs'
     Training completed in time:  0:53:06.691380
     Training Accuracy:  0.9975662
     Testing Accuracy:  0.9364625
 
 
-10 fold cross validation. 100 training epochs. 256 Batch Size
+However, with the 10 fold cross validation:
 
+    100 training epochs,  batch Size=256:
+    Feature type: 'mfccs'
     Training completed in time:  1:17:56.257562
     Fold 1:    accuracy = 0.5899198055267334
     Fold 2:    accuracy = 0.5777027010917664
@@ -160,6 +164,7 @@ Training for 500 epochs, batch size 256:
     Fold 10:    accuracy = 0.6702508926391602
     Average Accuracy:  0.61864656
 
+#### Mel Spectrograms
 
 Decreasing batch size
 
