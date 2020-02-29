@@ -20,21 +20,23 @@ def get_conv_model():
     
     model = Sequential()
 
-    model.add(Conv2D(filters=16, kernel_size=(3,3), kernel_regularizer=l2(0.001),
+    model.add(Conv2D(filters=16, kernel_size=(2,2), kernel_regularizer=l2(0.0001),
                     input_shape=(num_rows, num_columns, num_channels), activation='relu'))
     model.add(MaxPooling2D(pool_size=2))
-    model.add(Dropout(0.5))
+    # model.add(Dropout(0.2))
 
-    model.add(Conv2D(filters=32, kernel_size=(2,2), kernel_regularizer=l1(0.001), activation='relu'))
-    model.add(Dropout(0.5))
-
-    # model.add(Conv2D(filters=64, kernel_size=(3,3), kernel_regularizer=l1(0.001), activation='relu'))
+    model.add(Conv2D(filters=32, kernel_size=(2,2), kernel_regularizer=l2(0.0001), activation='relu'))
     # model.add(MaxPooling2D(pool_size=2))
-    # model.add(Dropout(0.5))
+    model.add(Dropout(0.2))
+
+    model.add(Conv2D(filters=64, kernel_size=(3,3), kernel_regularizer=l2(0.0001), activation='relu'))
+    model.add(MaxPooling2D(pool_size=2))
+    model.add(Dropout(0.2))
+    # model.add(GlobalAveragePooling2D())
 
     model.add(Flatten())
 
-    model.add(Dense(32, activation='relu')) 
+    model.add(Dense(64, activation='relu')) 
     model.add(Dropout(0.5))
 
     model.add(Dense(num_labels, activation='softmax'))
@@ -85,7 +87,7 @@ filter_size = 2
 # user specified number of epochs
 num_epochs = int(input('Enter number of epochs: '))
 # num_epochs = 72
-num_batch_size = 16
+num_batch_size = 8
 
 # start the timer before training. This will include all the fold durations
 start = datetime.now()
