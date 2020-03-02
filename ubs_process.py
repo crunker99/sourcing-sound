@@ -11,6 +11,7 @@ import pickle
 
 from src.wavhelp import WavHelper
 
+
 def extract_features(fname, features='mfccs', max_pad_len=174):
     '''
     Extract audio features given a wav file path, and pads features to create uniform vector sizes,
@@ -55,16 +56,13 @@ def examine_audio_files(metadata, audio_path='UrbanSoundDatasetSample/audio/'):
 
 
 # paths should be updated for full dataset
-# file_name = os.path.join(os.path.abspath('/UrbanSound8K/audio/'),'fold'+str(row["fold"])+'/',str(row["slice_file_name"]))
 
 metadata = pd.read_csv('UrbanSound8K/metadata/UrbanSound8K.csv')
 audio_path = 'UrbanSound8K/audio/'
 
-
 ## if using a subsample
 # existing_files = os.listdir('UrbanSoundDatasetSample/audio')
 # metadata = metadata[metadata['slice_file_name'].isin(existing_files)].reset_index(drop=True)
-
 
 # CNN expects similar sized data
 max_pad_len = 174
@@ -94,13 +92,9 @@ folds = np.array(featuresdf.fold.tolist())
 le = LabelEncoder()
 y = to_categorical(le.fit_transform(y)) 
 
-# X_train, X_test, y_train, y_test = train_test_split(X, y_cat, test_size=0.2, random_state = 42)
-
-
 ### store the preprocessed data for further use
 processed_data = (X, y, folds)
 data_path = os.path.join('pickles', 'urbansound_'+ vec_type + '.p')
 
 with open(data_path, 'wb') as handle:
     pickle.dump(processed_data, handle, protocol=2)
-

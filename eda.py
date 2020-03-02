@@ -94,6 +94,7 @@ def calc_fft(y, rate):
     return (magnitude, freq)
 
 
+
 df = pd.read_csv('data/train/roadsound_labels.csv')
 df.labels  = df.labels.replace('Race_car_and_auto_racing', 'Racecar')
 
@@ -110,57 +111,59 @@ class_dist = df.groupby(['labels'])['length'].mean().sort_values()
 n_classes = len(classes)
 
 # #Bar graph showing average length of class samples
-# fig, ax = plt.subplots(figsize=(6, 4))
-# ax.set_title('Class Distribution', y=1.08)
-# ax.barh((class_dist.index[-74:]),class_dist[-74:])
-# ax.set_xlabel('Average Sample Length (seconds)')
-# ax.set_ylabel('Class')
-# plt.tight_layout()
-# # plt.show()    
+fig, ax = plt.subplots(figsize=(6, 4))
+ax.set_title('Class Distribution', y=1.08)
+ax.barh((class_dist.index[-74:]),class_dist[-74:])
+ax.set_xlabel('Average Sample Length (seconds)')
+ax.set_ylabel('Class')
+plt.tight_layout()
+# plt.show()    
 df.reset_index(inplace=True)
-# noisy_df.reset_index(inplace=True)
+noisy_df.reset_index(inplace=True)
 
-# signals = {}
-# fft = {}
-# fbank = {}
-# mfccs = {}
-# mels = {} 
+signals = {}
+fft = {}
+fbank = {}
+mfccs = {}
+mels = {} 
 
-# # Plotting examples of each class
-# for c in tqdm(classes):
-#     wav_file = df[df.labels == c].iloc[0, 0]
-#     signal, rate = librosa.load('audio/train/'+wav_file, sr=22050)
-#     mask = envelope(signal, rate, 0.0005)
-#     signal = signal[mask]
-#     signals[c] = signal
-#     fft[c] = calc_fft(signal, rate)
-#     fbank[c] = logfbank(signal[:rate], rate, nfilt=26, nfft=1103).T
-#     mfccs[c] = mfcc(signal[:rate], rate, numcep=26, nfilt=26, nfft=1103).T
-#     mel = (librosa.feature.melspectrogram(signal, rate, n_mels=26,
-#                                             n_fft=1103))
-#     mels[c] = librosa.power_to_db(mel)
+# Plotting examples of each class
+for c in tqdm(classes):
+    wav_file = df[df.labels == c].iloc[0, 0]
+    signal, rate = librosa.load('audio/train/'+wav_file, sr=22050)
+    mask = envelope(signal, rate, 0.0005)
+    signal = signal[mask]
+    signals[c] = signal
+    fft[c] = calc_fft(signal, rate)
+    fbank[c] = logfbank(signal[:rate], rate, nfilt=26, nfft=1103).T
+    mfccs[c] = mfcc(signal[:rate], rate, numcep=26, nfilt=26, nfft=1103).T
+    mel = (librosa.feature.melspectrogram(signal, rate, n_mels=26,
+                                            n_fft=1103))
+    mels[c] = librosa.power_to_db(mel)
 
-# plot_signals(signals)
-# plot_fft(fft)
-# plot_fbank(fbank)
-# plot_mfccs(mfccs)
-# plot_mels(mels)
-# plt.tight_layout()
-# plt.show()
 
-# if len(os.listdir('clean')) == 0:
-#     for f in tqdm(df.fname):
-#         signal, rate = librosa.load('audio/train/'+f, sr=16000)
-#         mask = envelope(signal, rate, 0.00005)
-#         wavfile.write(filename='clean/'+f, rate=rate, data=signal[mask])
-#     for f in tqdm(noisy_df.fname):
-#         signal, rate = librosa.load('audio/train_noisy/'+f, sr=16000)
-#         mask = envelope(signal, rate, 0.0005)
-#         wavfile.write(filename='clean/'+f, rate=rate, data=signal[mask])
+# create plots for all
+plot_signals(signals)
+plot_fft(fft)
+plot_fbank(fbank)
+plot_mfccs(mfccs)
+plot_mels(mels)
+plt.tight_layout()
+plt.show()
 
-# test_df = pd.read_csv('data/test/roadsound_labels.csv')
-# if len(os.listdir('audio/test_roadsound')) == 0:
-#     for f in tqdm(test_df.fname):
-#         signal, rate = librosa.load('audio/test/'+f, sr=16000)
-#         wavfile.write(filename='audio/test_roadsound/'+f, rate=rate, data=signal)
+if len(os.listdir('clean')) == 0:
+    for f in tqdm(df.fname):
+        signal, rate = librosa.load('audio/train/'+f, sr=16000)
+        mask = envelope(signal, rate, 0.00005)
+        wavfile.write(filename='clean/'+f, rate=rate, data=signal[mask])
+    for f in tqdm(noisy_df.fname):
+        signal, rate = librosa.load('audio/train_noisy/'+f, sr=16000)
+        mask = envelope(signal, rate, 0.0005)
+        wavfile.write(filename='clean/'+f, rate=rate, data=signal[mask])
+
+test_df = pd.read_csv('data/test/roadsound_labels.csv')
+if len(os.listdir('audio/test_roadsound')) == 0:
+    for f in tqdm(test_df.fname):
+        signal, rate = librosa.load('audio/test/'+f, sr=16000)
+        wavfile.write(filename='audio/test_roadsound/'+f, rate=rate, data=signal)
 

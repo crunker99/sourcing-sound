@@ -19,12 +19,15 @@
 ## Datasets
 - [Freesound Dataset](https://annotator.freesound.org/fsd/) - manually labeled by open source
     - 4969 clips
-    - 70 examples per class
+    - 70 examples per class (79 classes)
     - Total duration: ~ 10 hours
-- Portion of [Yahoo Flickr Creative Commons (YFCC) 100M dataset](https://code.flickr.net/2014/10/15/the-ins-and-outs-of-the-yahoo-flickr-100-million-creative-commons-dataset/) - 
+- Portion of [Yahoo Flickr Creative Commons (YFCC) 100M dataset](https://code.flickr.net/2014/10/15/the-ins-and-outs-of-the-yahoo-flickr-100-million-creative-commons-dataset/) 
     - 19,815 clips
-    - 300 examples per class
+    - 300 examples per class (79 classes)
     - Total duration: ~80 hours
+- UrbanSound8k
+     - 8732 clips
+     - 400 - 100 examples per class (10 classes)
 
 ## Processing
 - Explored various metrics: Spectral centroid, spectral bandwidth, Spectral rolloff, zero crossing rate, MFCCs, Mel Spectrograms
@@ -40,7 +43,7 @@ Simply amplitude in dB over time
 <img src="img/timeseries1.png" height="304" width="700">
 
 Fast Fourier Transform makes it possible to vizualize frequency concentrations for an entire clip.
-X-axis is hz, Y-axis is dB. Note the lack of time scale.
+X-axis is hz, Y-axis is dB. 
 
 <img src="img/fft.png" height="316" width="700">
 
@@ -74,10 +77,7 @@ Other issues were probably coming from noisy data/labels, and differing sample d
 
 To give the classifier more contextual information on the same clip, implement rolling, overlapping windows on the Mel spectrograms of the sound.
 
-<img src="img/mel_win215.png" height="247" width="370">
-<img src="img/mel_win268.png" height="247" width="370">
-<img src="img/mel_win321.png" height="247" width="370">
-<img src="img/mel_win374.png" height="247" width="370">
+<img src="img/mel_win215.png" height="247" width="370"><img src="img/mel_win268.png" height="247" width="370"><img src="img/mel_win321.png" height="247" width="370"><img src="img/mel_win374.png" height="247" width="370">
 
 
 <b>Minor success:</b> Predicting on a validation set, precision increased to 52%. Recall increased to 6.6%. Accuracy dropped to 51.7%.
@@ -93,7 +93,7 @@ Before taking all 70+ classes into account, it's beneficial to focus on a few cl
 
 ![roadsounds length dist](img/classlengthdist.png)
 
-It is still necessary to handle these differing clip lengths in the data as we feed them to the CNN. An overview of a few mel spectrograms of each class shows the variety and similarity possible within a class.
+It is still necessary to handle these differing clip lengths in the data as we feed them to the CNN. An overview of a few Mel spectrograms of each class shows the variety and similarity possible within a class.
 
 
 <img src="img/mels_class_examples.png" >
@@ -105,7 +105,7 @@ The obvious danger created by these similar examples is that some of their signa
 
 ## Initial Model
 
-A relatively simply CNN model was compiled in Python using Tensorflow with Keras. Each clip was downsampled to a sample rate of 16,000 samples per second, with a bit depth of 16 (2 to the 16 possible values per sample). The audio was converted to mel spectrograms with 60 filters. To increase examples of each class,  these spectrograms were repeatedly randomly sliced which created a uniform shape of inputs for the model.
+A relatively simply CNN model was compiled in Python using Tensorflow with Keras. Each clip was downsampled to a sample rate of 16,000 samples per second, with a bit depth of 16 (2 to the 16 possible values per sample). The audio was converted to Mel spectrograms with 60 filters. To increase examples of each class, these spectrograms were repeatedly randomly sliced which created a uniform shape of inputs for the model.
 
 After training for 100 epochs, the model's validation accuracy was not increasing anymore. On a hold-out set, the best model recorded about 53% accuracy.
 
@@ -126,7 +126,7 @@ Gathered new data: [UrbanSound8K Dataset](https://urbansounddataset.weebly.com/u
     - Siren
     - Stree music
 
-Other projects <link> have used MFCCs to train models, and that was explored initially on this dataset. Mel spectrograms will be explored as well with a similar CNN framework. 
+[Other projects](http://www.justinsalamon.com/uploads/4/3/9/4/4394963/salamon_urbansound_acmmm14.pdf) have used MFCCs to train models, and that was explored initially on this dataset. Mel spectrograms will be explored as well with a similar CNN framework. 
 
 #### \*\*\*A note on cross-validation***
 Due to the way the UrbanSound8K dataset was created, model results will be invalid if you reshuffle the data and create your own train-test split. Some sounds come from very similar acoustic environments or even the same wav file, and a model will easily recognize this in testing if you shuffle the data, because it will easily see the same noise signature, but not necessarily the true class/signal signature.
@@ -164,27 +164,18 @@ However, with the 10 fold cross validation:
     Fold 10:    accuracy = 0.6702508926391602
     Average Accuracy:  0.61864656
 
-#### Mel Spectrograms
 
-Decreasing batch size
+# Models
 
-    Training completed in time:  0:45:38.505004
-    Fold 1:    accuracy = 0.5841924548149109
-    Fold 2:    accuracy = 0.5945945978164673
-    Fold 3:    accuracy = 0.5902702808380127
-    Fold 4:    accuracy = 0.5898990035057068
-    Fold 5:    accuracy = 0.692307710647583
-    Fold 6:    accuracy = 0.5808019638061523
-    Fold 7:    accuracy = 0.6169450879096985
-    Fold 8:    accuracy = 0.673697292804718
-    Fold 9:    accuracy = 0.688725471496582
-    Fold 10:    accuracy = 0.6344085931777954
-    Average Accuracy:  0.62458426
+- A number of different neural configurations were explored, including CNNs and RNNs.
+- CNNs outperformed RNN and took less time for training.
+- Primary metrics to measure model performance: Validation accuracy, class recall/precision/f-1 score.
+- Best model had 3 convolutional layers, 4 fully connected layers. 
+- L2 weight regularization in convolutial improved performance.
+- Because the sounds are not limited to speech, Mel spectrogram featurization provided better results than MFCC featurization.
 
+### Results
 
-### Best model so far:
-72 epochs
-Batch size = 16
 
     Model: "sequential"
     _________________________________________________________________
@@ -217,7 +208,9 @@ Batch size = 16
     Non-trainable params: 0
     _________________________________________________________________
 
+### Metrics
 
+    72 training epochs, batch size = 16
     Training completed in time:  1:48:30.603215
     Fold 1:    accuracy = 0.6345933675765991
     Fold 2:    accuracy = 0.6441441178321838
@@ -231,11 +224,7 @@ Batch size = 16
     Fold 10:    accuracy = 0.7096773982048035
     Average Accuracy:  0.6613201
 
-
-![Confusion_matrix](img/confmat_1.png)
-
-Other metrics:
-
+----
                     precision    recall  f1-score   support
 
     air_conditioner     0.49      0.38      0.43      1000
@@ -254,12 +243,15 @@ Other metrics:
     weighted avg       0.64      0.64      0.63      8732
 
 
+The confusion matrix shows the model's patterns for classes.
+- Jackhammer is mis-labelled drilling about 31% of the time.
+- Air conditioner is occassionaly recoginzed as an idling engine.
+- Gunshot is the strongest prediction the model makes.
 
+![Confusion_matrix](img/confmat_1.png)
 
+### Conclusion and Final steps
 
-
-
-Trying to resimplify the model. Changing some L2 regularizers to L1 to hopefully create some model sparsity. Increasning penalties across the board from 1e-4 to 1e-3.
 
 
 <!-- ## RNN Model -->

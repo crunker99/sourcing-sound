@@ -17,23 +17,21 @@ from sklearn import metrics
 
 
 def get_conv_model():
-    
+    """
+    Create convolutional neural network with keras. Layers already set and only adjustable through source file.
+    """
     model = Sequential()
 
     model.add(Conv2D(filters=16, kernel_size=(2,2), kernel_regularizer=l2(0.0001),
                     input_shape=(num_rows, num_columns, num_channels), activation='relu'))
     model.add(MaxPooling2D(pool_size=2))
-    # model.add(Dropout(0.2))
 
     model.add(Conv2D(filters=32, kernel_size=(2,2), kernel_regularizer=l2(0.0001), activation='relu'))
-    # model.add(MaxPooling2D(pool_size=2))
     model.add(Dropout(0.2))
 
     model.add(Conv2D(filters=64, kernel_size=(3,3), kernel_regularizer=l2(0.0001), activation='relu'))
     model.add(MaxPooling2D(pool_size=2))
     model.add(Dropout(0.2))
-    # model.add(GlobalAveragePooling2D())
-
     model.add(Flatten())
 
     model.add(Dense(64, activation='relu')) 
@@ -45,8 +43,7 @@ def get_conv_model():
     
     return model
 
-
-
+def mode
 # Retrieve data from pickle file. 
 # From ubs_process.py, will be a 3-item tuple(X, y(categorical matrix), folds)
 vec_type = 'mels'
@@ -56,7 +53,6 @@ with open(data_path, 'rb') as handle:
     data = pickle.load(handle)
 
 X, y, folds = data[0], data[1], data[2]
-
 
 
 # Pre-specify global variables for model
@@ -74,13 +70,6 @@ X = X.reshape(X.shape[0], num_rows, num_columns, num_channels)
 
 num_labels = y.shape[1]
 filter_size = 2
-
-# # Pre training scores
-# model = get_conv()
-##### score = model.evaluate(X_test, y_test, verbose=1) 
-# accuracy = 100*score[1]
-# print("Pre-training accuracy: %.4f%%" % accuracy)
-
 
 ### TRAINING
 
@@ -135,10 +124,6 @@ for train_idx, test_idx in logo.split(X, y, folds):
     duration_fold = datetime.now() - start_fold
     print("Fold training completed in time: ", duration_fold)
 
-    # Evaluating the model on the training and validating set
-    # score_train = model.evaluate(X_train, y_train, verbose=0)
-    # print("Training Accuracy: ", score_train[1])
-
     score_test = history.history['val_acc'][-1]
     print("Final Testing Accuracy: ", score_test)
 
@@ -148,7 +133,6 @@ for train_idx, test_idx in logo.split(X, y, folds):
     fold_accuracies[fold] = best_score
 
     clear_session()
-
 
 
 ### Review results of total training
@@ -162,11 +146,3 @@ for k, v in sorted(fold_accuracies.items()):
 
 avg_score = np.mean([v for v in fold_accuracies.values()])
 print('Average Accuracy: ', avg_score)
-
-# # Evaluating the model on the training and testing set
-# score = model.evaluate(X_train, y_train, verbose=0)
-# print("Training Accuracy: ", score[1])
-
-# score = model.evaluate(X_test, y_test, verbose=0)
-# print("Testing Accuracy: ", score[1])
-
