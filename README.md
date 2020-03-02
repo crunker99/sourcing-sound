@@ -1,5 +1,5 @@
 # Sourcing Sound
-## Audio classification
+## Audio classification with ML
 
 
 
@@ -11,10 +11,7 @@
     - Wildlife monitoring
     - Security event detection
     - Music production
-- Initially develop pipeline for single class
-- Expand to multi-class
-
-
+- Create deployable webapp for sound recognition, with model running on backend.
 
 ## Datasets
 - [Freesound Dataset](https://annotator.freesound.org/fsd/) - manually labeled by open source
@@ -125,6 +122,10 @@ Gathered new data: [UrbanSound8K Dataset](https://urbansounddataset.weebly.com/u
     - Jackhammer
     - Siren
     - Stree music
+
+
+![ubs class dist](img/ubs_classdist.png)
+
 
 [Other projects](http://www.justinsalamon.com/uploads/4/3/9/4/4394963/salamon_urbansound_acmmm14.pdf) have used MFCCs to train models, and that was explored initially on this dataset. Mel spectrograms will be explored as well with a similar CNN framework. 
 
@@ -250,8 +251,11 @@ The confusion matrix shows the model's patterns for classes.
 
 ![Confusion_matrix](img/confmat_1.png)
 
-### Conclusion and Final steps
+## Deplyoment
+With the model built, a webapp was created using Flask. The app can record the user's environmental sounds and will make prediction on primary sound in 4 second snippets.
 
+### Conclusion and next steps
 
-
-<!-- ## RNN Model -->
+- The neural network was better at modelling sound labels than classic ML techniques.  
+- Mel Spectrograms are an effective way to feed a model environmenal soundscapes.
+- Gather more data for even more accurate models (of course)
