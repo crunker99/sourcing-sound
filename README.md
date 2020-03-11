@@ -1,5 +1,6 @@
 # Sourcing Sound
-## Audio classification with ML
+
+## Classifying Everyday Sounds with Machine Learning
 
 
 
@@ -28,7 +29,7 @@
 
 ## Processing
 - Explored various metrics: Spectral centroid, spectral bandwidth, Spectral rolloff, zero crossing rate, MFCCs, Mel Spectrograms
-- Because this project is not soley focused on human speech, Mel spectrograms are likely more appropriate. However, MFCCS were also explored, as well as raw audio, however they did not achieve the best results and generally required more computational resources.
+- Because this project is not focused on human speech, Mel spectrograms are likely more appropriate. However, MFCCS were also explored, as well as raw audio, however they did not achieve the best results and generally required more computational resources.
 
 Mel spectrograms give us an 'image' of a sound. On the Mel scale, distance between frequencies better relate to human hearing; the difference between 100 - 200hz is extremely noticeable to humans, but 10,000-10,100hz is barely audible. The Mel scale transforms audio with quasi-logarithmic frequency scaling.
 
@@ -58,7 +59,7 @@ Mel Spectrograms relate the relative power of frequencies as heard by humans ove
 ![unprocessed frequency power](img/mel_winoriginal.png)
 ![log frequency power normalized](img/mel_winnorm.png) -->
 
-## Baseline Model with classic machine learning
+## Baseline Model with traditional machine learning
 
 Initially, the class labels were reduced to a simple recognition problem: does a clip contain the sound "purr" or not?
 
